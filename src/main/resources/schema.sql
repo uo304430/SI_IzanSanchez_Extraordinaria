@@ -2,17 +2,48 @@
 --(en este caso en cada aplicacion se usa solo una tabla, por lo que no hace falta)
 
 --Para giis.demo.tkrun:
-drop table Roles;
-drop table Incidencia;
-drop table Usuarios;
+--Para giis.demo.tkrun:
+DROP TABLE IF EXISTS Roles;
+DROP TABLE IF EXISTS Incidencia;
+DROP TABLE IF EXISTS Usuarios;
+DROP TABLE IF EXISTS Estados;
+DROP TABLE IF EXISTS Tipos;
 
+-- Create referenced (master) tables first
+CREATE TABLE Tipos (
+	id INTEGER PRIMARY KEY NOT NULL,
+	nombre VARCHAR(32) NOT NULL
+);
 
-create table Incidencia (id int primary key not null, tipo int foreign key references Tipos(id), descripcion varchar(32), localizacion varchar(32), usuario int foreign key references Usuarios(id), tecnico int foreign key references Usuarios(id), Coste varchar(32), descr_reparación varchar(32), fecha date not null, estado int foreign key references Estados(id), validación boolean not null);
+CREATE TABLE Roles (
+	id INTEGER PRIMARY KEY NOT NULL,
+	nombre VARCHAR(32) NOT NULL
+);
 
-create table Usuarios (id int primary key not null, nombre varchar(32) not null, email varchar(32) not null unique, dni varchar(32) not null, rol int foreign key references Roles(id));
+CREATE TABLE Estados (
+	id INTEGER PRIMARY KEY NOT NULL,
+	nombre VARCHAR(32) NOT NULL
+);
 
-create table Roles (id int primary key not null, nombre varchar(32) not null);
+-- Then tables that reference them
+CREATE TABLE Usuarios (
+	id INTEGER PRIMARY KEY NOT NULL,
+	nombre VARCHAR(32) NOT NULL,
+	email VARCHAR(32) NOT NULL UNIQUE,
+	dni VARCHAR(32) NOT NULL,
+	rol INTEGER REFERENCES Roles(id)
+);
 
-create table Estados (id int primary key not null, nombre varchar(32) not null);
-
-create table Tipos (id int primary key not null, nombre varchar(32) not null);
+CREATE TABLE Incidencia (
+	id INTEGER PRIMARY KEY NOT NULL,
+	tipo INTEGER REFERENCES Tipos(id),
+	descripcion VARCHAR(32),
+	localizacion VARCHAR(32),
+	usuario INTEGER REFERENCES Usuarios(id),
+	tecnico INTEGER REFERENCES Usuarios(id),
+	Coste VARCHAR(32),
+	descr_reparación VARCHAR(32),
+	fecha DATE NOT NULL,
+	estado INTEGER REFERENCES Estados(id),
+	validación BOOLEAN NOT NULL
+);

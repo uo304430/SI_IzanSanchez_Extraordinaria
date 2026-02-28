@@ -1,20 +1,6 @@
 --Datos para carga inicial de la base de datos
 
---Para giis.demo.tkrun:
-delete from carreras;
-insert into carreras(id,inicio,fin,fecha,descr) values 
-	(100,'2016-10-05','2016-10-25','2016-11-09','finalizada'),
-	(101,'2016-10-05','2016-10-25','2016-11-10','en fase 3'),
-	(102,'2016-11-05','2016-11-09','2016-11-20','en fase 2'),
-	(103,'2016-11-10','2016-11-15','2016-11-21','en fase 1'),
-	(104,'2016-11-11','2016-11-15','2016-11-22','antes inscripcion');
-
 -- Datos de ejemplo para giis.demo.tkrun (Incidencias y usuarios)
-delete from Incidencia;
-delete from Usuarios;
-delete from Roles;
-delete from Estados;
-delete from Tipos;
 
 insert into Roles(id,nombre) values 
 	(1,'Admin'),
@@ -27,7 +13,7 @@ insert into Estados(id,nombre) values
 	(3,'Asignada'),
 	(4,'En proceso'),
 	(5,'Resuelta'),
-	(6,'Cerrada')
+	(6,'Cerrada');
 
 insert into Tipos(id,nombre) values 
 	(1,'alumbrado'),
@@ -35,7 +21,7 @@ insert into Tipos(id,nombre) values
 	(3,'mobiliario urbano'),
 	(4,'zonas verdes'),
 	(5,'señalización'),
-	(6,'calzada')
+	(6,'calzada');
 
 insert into Usuarios(id,nombre,email,dni,rol) values
 	(1,'Ana López','ana.lopez@example.com','12345678A',3),

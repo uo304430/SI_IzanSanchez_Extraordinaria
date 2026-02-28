@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import giis.demo.tkrun.*;
+import giis.demo.tkrun.usr_registra_incidencia.*; // added to wire Incidencias MVC
 
 /**
  * Punto de entrada principal que incluye botones para la ejecucion de las pantallas 
@@ -60,6 +61,16 @@ public class SwingMain {
 		});
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		frame.getContentPane().add(btnEjecutarTkrun);
+		
+		// NEW: button to launch Incidencias MVC
+		JButton btnEjecutarIncidencias = new JButton("Ejecutar Incidencias");
+		btnEjecutarIncidencias.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				IncidenciasController controller = new IncidenciasController(new IncidenciasModel(), new IncidenciasView());
+				controller.initController();
+			}
+		});
+		frame.getContentPane().add(btnEjecutarIncidencias);
 		
 			
 		JButton btnInicializarBaseDeDatos = new JButton("Inicializar Base de Datos en Blanco");
