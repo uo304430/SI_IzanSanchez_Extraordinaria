@@ -1,6 +1,7 @@
 package giis.demo.tkrun.DTOs;
 
 import java.time.LocalDateTime;
+import giis.demo.tkrun.CiudadanoConsulataIncidencias.ConsultaModel;
 
 /** Modelo de incidencia convertido a DTO */
 public class IncidenciaDTO {
@@ -47,6 +48,6 @@ public class IncidenciaDTO {
 
     // Derived getter to expose the human-readable estado name for UI/table use
     public String getEstadoNombre() {
-        return Estados.nombreDeEstado(this.estado);
+        return ConsultaModel.nombreDeEstado(this.estado);
     }
 }

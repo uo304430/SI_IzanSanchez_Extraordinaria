@@ -1,4 +1,4 @@
-package giis.demo.tkrun.usr_registra_incidencia;
+package giis.demo.tkrun.CiudadanoRegistraIncidencias;
 
 import java.time.LocalDateTime;
 import java.util.List;

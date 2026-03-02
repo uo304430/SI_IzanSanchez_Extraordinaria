@@ -1,4 +1,4 @@
-package giis.demo.tkrun.usr_registra_incidencia;
+package giis.demo.tkrun.CiudadanoRegistraIncidencias;
 
 import javax.swing.JFrame;
 import net.miginfocom.swing.MigLayout;
