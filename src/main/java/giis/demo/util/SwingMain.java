@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import giis.demo.tkrun.*;
 import giis.demo.tkrun.CiudadanoRegistraIncidencias.*;
 import giis.demo.tkrun.CiudadanoConsulataIncidencias.*;
+import giis.demo.tkrun.OperadorValidaIncidencias.*;
+import giis.demo.tkrun.OperadorAsigna.*;
 
 /**
  * Punto de entrada principal que incluye botones para la ejecucion de las pantallas 
@@ -20,6 +22,9 @@ import giis.demo.tkrun.CiudadanoConsulataIncidencias.*;
 public class SwingMain {
 
 	private JFrame frame;
+	// Keep a reference to controllers to avoid unused-variable warnings and to manage lifecycle
+	private ValidarControler validarController;
+    private AsignarController asignarController;
 
 	/**
 	 * Launch the application.
@@ -63,7 +68,6 @@ public class SwingMain {
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 		frame.getContentPane().add(btnEjecutarTkrun);
 		
-		// NEW: button to launch Incidencias MVC
 		JButton btnEjecutarIncidencias = new JButton("Registrar Incidencias");
 		btnEjecutarIncidencias.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -73,7 +77,6 @@ public class SwingMain {
 		});
 		frame.getContentPane().add(btnEjecutarIncidencias);
 
-		// NEW: button to launch Consulta Incidencias
 		JButton btnProbarConsultaIncidencias = new JButton("Consultar Incidencias");
 		btnProbarConsultaIncidencias.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -83,7 +86,24 @@ public class SwingMain {
 		});
 		frame.getContentPane().add(btnProbarConsultaIncidencias);
 		
-			
+		JButton btnProbarValidarIncidencias = new JButton("Validar Incidencias");
+		btnProbarValidarIncidencias.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String operador = "carlos.ruiz@example.com";
+				validarController = new ValidarControler(new ValidarModel(), new ValidarView(), operador);
+			}
+		});
+		frame.getContentPane().add(btnProbarValidarIncidencias);
+
+		JButton btnProbarAsignarIncidencias = new JButton("Asignar Incidencias");
+		btnProbarAsignarIncidencias.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String operador = "carlos.ruiz@example.com";
+				asignarController = new AsignarController(new AsignarModel(), new AsignarView(), operador);
+			}
+		});
+		frame.getContentPane().add(btnProbarAsignarIncidencias);
+		
 		JButton btnInicializarBaseDeDatos = new JButton("Inicializar Base de Datos en Blanco");
 		btnInicializarBaseDeDatos.addActionListener(new ActionListener() { //NOSONAR codigo autogenerado
 			public void actionPerformed(ActionEvent e) {
@@ -92,7 +112,7 @@ public class SwingMain {
 			}
 		});
 		frame.getContentPane().add(btnInicializarBaseDeDatos);
-			
+		
 		JButton btnCargarDatosIniciales = new JButton("Cargar Datos Iniciales para Pruebas");
 		btnCargarDatosIniciales.addActionListener(new ActionListener() { //NOSONAR codigo autogenerado
 			public void actionPerformed(ActionEvent e) {

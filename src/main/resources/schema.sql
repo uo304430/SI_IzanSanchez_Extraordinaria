@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS Incidencia;
 DROP TABLE IF EXISTS Usuarios;
 DROP TABLE IF EXISTS Estados;
 DROP TABLE IF EXISTS Tipos;
+DROP TABLE IF EXISTS HistorialIncidencia;
 
 -- Create referenced (master) tables first
 CREATE TABLE Tipos (
@@ -46,4 +47,14 @@ CREATE TABLE Incidencia (
 	fecha DATE NOT NULL,
 	estado INTEGER REFERENCES Estados(id),
 	validación BOOLEAN NOT NULL
+);
+
+-- Historial de cambios sobre la incidencia: quien, cuando y que accion
+CREATE TABLE HistorialIncidencia (
+	id INTEGER PRIMARY KEY NOT NULL,
+	incidencia INTEGER REFERENCES Incidencia(id),
+	fecha DATE NOT NULL,
+	accion VARCHAR(64) NOT NULL,
+	usuario INTEGER REFERENCES Usuarios(id),
+	comentario VARCHAR(256)
 );
