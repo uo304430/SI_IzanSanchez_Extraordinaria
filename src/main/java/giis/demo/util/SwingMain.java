@@ -1,5 +1,5 @@
 package giis.demo.util;
-
+ 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.BoxLayout;
@@ -11,21 +11,23 @@ import giis.demo.tkrun.CiudadanoRegistraIncidencias.*;
 import giis.demo.tkrun.CiudadanoConsulataIncidencias.*;
 import giis.demo.tkrun.OperadorValidaIncidencias.*;
 import giis.demo.tkrun.OperadorAsigna.*;
-
+import Izan_33804.*;
+import Izan_33805.*;
+ 
 /**
- * Punto de entrada principal que incluye botones para la ejecucion de las pantallas 
- * de las aplicaciones de ejemplo
- * y acciones de inicializacion de la base de datos.
- * No sigue MVC pues es solamente temporal para que durante el desarrollo se tenga posibilidad
- * de realizar acciones de inicializacion
- */
+* Punto de entrada principal que incluye botones para la ejecucion de las pantallas
+* de las aplicaciones de ejemplo
+* y acciones de inicializacion de la base de datos.
+* No sigue MVC pues es solamente temporal para que durante el desarrollo se tenga posibilidad
+* de realizar acciones de inicializacion
+*/
 public class SwingMain {
-
+ 
 	private JFrame frame;
 	// Keep a reference to controllers to avoid unused-variable warnings and to manage lifecycle
 	private ValidarControler validarController;
     private AsignarController asignarController;
-
+ 
 	/**
 	 * Launch the application.
 	 */
@@ -41,14 +43,14 @@ public class SwingMain {
 			}
 		});
 	}
-
+ 
 	/**
 	 * Create the application.
 	 */
 	public SwingMain() {
 		initialize();
 	}
-
+ 
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -76,7 +78,7 @@ public class SwingMain {
 			}
 		});
 		frame.getContentPane().add(btnEjecutarIncidencias);
-
+ 
 		JButton btnProbarConsultaIncidencias = new JButton("Consultar Incidencias");
 		btnProbarConsultaIncidencias.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -94,7 +96,7 @@ public class SwingMain {
 			}
 		});
 		frame.getContentPane().add(btnProbarValidarIncidencias);
-
+ 
 		JButton btnProbarAsignarIncidencias = new JButton("Asignar Incidencias");
 		btnProbarAsignarIncidencias.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -123,7 +125,53 @@ public class SwingMain {
 		});
 		frame.getContentPane().add(btnCargarDatosIniciales);
 	}
-
+	
+	JButton btnPlanRes = new JButton("Planificar resolucion de una incidencia ");
+	btnPlanRes.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			try {
+				Database db = new Database();
+				
+				db.createDatabase(false);
+				
+				db.loadDatabase();
+				
+				
+				IncidenciasModel model = new IncidenciasModel();
+				IncidenciasView view = new IncidenciasView();
+				String emailTecnico = "carlos.ruiz@example.com";
+				
+				IncidenciasController controller = new IncidenciasController(model, view, emailTecnico);
+				controller.initController();
+				
+				System.out.println("Módulo lanzado con éxito.");
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				SwingUtil.showMessage("Error en el proceso unificado: " + ex.getMessage(), "Error", 0);
+			}
+		}
+	});
+	frame.getContentPane().add(btnPlanRes);
+	
+			JButton btnHistorial = new JButton(" Visualizar Historial Completo");
+			btnHistorial.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						
+						HistorialModel model = new HistorialModel();
+						HistorialView view = new HistorialView();
+						HistorialController controller = new HistorialController(model, view);
+						controller.initController();
+						
+						System.out.println("Historial lanzado con éxito.");
+					} catch (Exception ex) {
+						ex.printStackTrace();
+						SwingUtil.showMessage("Error al lanzar el historial: " + ex.getMessage(), "Error", 0);
+					}
+				}
+			});
+			frame.getContentPane().add(btnHistorial);
+ 
 	public JFrame getFrame() { return this.frame; }
 	
 }

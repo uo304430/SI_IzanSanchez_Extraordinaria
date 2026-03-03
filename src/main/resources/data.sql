@@ -31,3 +31,15 @@ insert into Usuarios(id,nombre,email,dni,rol) values
 insert into Incidencia(id,tipo,descripcion,localizacion,usuario,tecnico,Coste,descr_reparación,fecha,estado,validación) values
 	(1,1,'Fallo en el servidor','Sala 1',1,2,'150','Reemplazo fuente','2016-12-01T10:00:00',1,false),
 	(2,2,'Error en la aplicación','Puesto 23',3,2,'0','Aplicado parche','2016-12-02T15:30:00',2,true);
+  INSERT INTO HistorialIncidencias (id_incidencia, fecha_hora, descripcion_evento, estado_alcanzado)
+VALUES (1, '2016-12-01 09:00:00', 'Registro inicial de la incidencia', 1); 
+
+INSERT INTO HistorialIncidencias (id_incidencia, fecha_hora, descripcion_evento, estado_alcanzado)
+VALUES (1, '2016-12-01 10:30:00', 'Asignada al técnico Carlos Ruiz', 3); 
+
+
+INSERT INTO HistorialIncidencias (id_incidencia, fecha_hora, descripcion_evento, estado_alcanzado)
+VALUES (2, '2016-12-02 08:15:00', 'Registro inicial de la incidencia', 1); 
+
+INSERT INTO HistorialIncidencias (id_incidencia, fecha_hora, descripcion_evento, estado_alcanzado)
+VALUES (2, '2016-12-02 11:00:00', 'Validada por operador', 2); 
