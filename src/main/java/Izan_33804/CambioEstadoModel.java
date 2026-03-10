@@ -19,9 +19,9 @@ public class CambioEstadoModel {
         String sqlUpdate = "UPDATE Incidencia SET Coste = ?, descr_reparación = ?, estado = 4 WHERE id = ?";
         db.executeUpdate(sqlUpdate, horas, trabajos, id);
 
-        // 2. Registramos el evento exacto en el historial para la HU 33805
-        String sqlLog = "INSERT INTO HistorialIncidencias (id_incidencia, descripcion_evento, estado_alcanzado) VALUES (?, ?, ?)";
-        db.executeUpdate(sqlLog, id, "Planificación técnica: " + trabajos, 4);
+        // 2. Registramos el evento en el historial unificado
+        String sqlLog = "INSERT INTO HistorialIncidencia (incidencia, accion, comentario, estado) VALUES (?, ?, ?, ?)";
+        db.executeUpdate(sqlLog, id, "Planificación técnica", "Planificación técnica: " + trabajos, 4);
     }
 
     public IncidenciaEntity getIncidencia(int id) {

@@ -3,7 +3,6 @@ DROP TABLE IF EXISTS Usuarios;
 DROP TABLE IF EXISTS Roles;
 DROP TABLE IF EXISTS Estados;
 DROP TABLE IF EXISTS Tipos;
-DROP TABLE IF EXISTS HistorialIncidencias;
 DROP TABLE IF EXISTS HistorialIncidencia;
 
 
@@ -37,20 +36,12 @@ CREATE TABLE Incidencia (
     estado INT REFERENCES Estados(id), 
     validación BOOLEAN NOT NULL
 );
-CREATE TABLE HistorialIncidencias (
-    id_log INTEGER PRIMARY KEY AUTOINCREMENT,
-    id_incidencia INT NOT NULL,
-    fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP, 
-    descripcion_evento VARCHAR(255) NOT NULL,
-    estado_alcanzado INT NOT NULL,
-    FOREIGN KEY (id_incidencia) REFERENCES Incidencia(id)
-);
-
 CREATE TABLE HistorialIncidencia (
-	id INTEGER PRIMARY KEY NOT NULL,
-	incidencia INTEGER REFERENCES Incidencia(id),
-	fecha DATE NOT NULL,
-	accion VARCHAR(64) NOT NULL,
-	usuario INTEGER REFERENCES Usuarios(id),
-	comentario VARCHAR(256)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    incidencia INT NOT NULL REFERENCES Incidencia(id),
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    accion VARCHAR(64) NOT NULL,
+    usuario INT REFERENCES Usuarios(id),
+    comentario VARCHAR(256),
+    estado INT REFERENCES Estados(id)
 );

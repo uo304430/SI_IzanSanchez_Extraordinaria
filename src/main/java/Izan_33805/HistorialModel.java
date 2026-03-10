@@ -25,10 +25,10 @@ public class HistorialModel {
 
     
     public List<HistorialDTO> getHistorialPorId(int idIncidencia) {
-        String sql = "SELECT fecha_hora as fecha, id_incidencia as id, " +
-                     "descripcion_evento as descripcion, estado_alcanzado as estado " +
-                     "FROM HistorialIncidencias WHERE id_incidencia = ? " +
-                     "ORDER BY fecha_hora DESC";
+        String sql = "SELECT fecha as fecha, incidencia as id, " +
+                     "comentario as descripcion, estado as estado " +
+                     "FROM HistorialIncidencia WHERE incidencia = ? " +
+                     "ORDER BY fecha DESC";
         return db.executeQueryPojo(HistorialDTO.class, sql, idIncidencia);
     }
 }
