@@ -3,14 +3,14 @@ package Izan_33804;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 
-public class IncidenciasView {
+public class CambioEstadoView {
     private JFrame frame;
     private JTable tabIncidencias;
     private JButton btnCargar;
     private JButton btnPlanificar;
     private JTextField txtId, txtHoras, txtTrabajos;
 
-    public IncidenciasView() {
+    public CambioEstadoView() {
         frame = new JFrame("Izan - Planificar Incidencia");
         frame.setBounds(100, 100, 500, 450);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

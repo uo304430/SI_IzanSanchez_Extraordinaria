@@ -4,12 +4,12 @@ import giis.demo.util.SwingUtil;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class IncidenciasController {
-    private IncidenciasModel model;
-    private IncidenciasView view;
+public class CambioEstadoController {
+    private CambioEstadoModel model;
+    private CambioEstadoView view;
     private String email;
 
-    public IncidenciasController(IncidenciasModel m, IncidenciasView v, String email) {
+    public CambioEstadoController(CambioEstadoModel m, CambioEstadoView v, String email) {
         this.model = m;
         this.view = v;
         this.email = email;

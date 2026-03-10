@@ -13,10 +13,8 @@ CREATE TABLE Tipos (
 	nombre VARCHAR(32) NOT NULL
 );
 
-
 CREATE TABLE Roles (id INT PRIMARY KEY NOT NULL, nombre VARCHAR(32) NOT NULL);
 CREATE TABLE Estados (id INT PRIMARY KEY NOT NULL, nombre VARCHAR(32) NOT NULL);
-CREATE TABLE Tipos (id INT PRIMARY KEY NOT NULL, nombre VARCHAR(32) NOT NULL);
 
 CREATE TABLE Usuarios (
     id INT PRIMARY KEY NOT NULL, 
@@ -46,6 +44,7 @@ CREATE TABLE HistorialIncidencias (
     descripcion_evento VARCHAR(255) NOT NULL,
     estado_alcanzado INT NOT NULL,
     FOREIGN KEY (id_incidencia) REFERENCES Incidencia(id)
+);
 
 CREATE TABLE HistorialIncidencia (
 	id INTEGER PRIMARY KEY NOT NULL,

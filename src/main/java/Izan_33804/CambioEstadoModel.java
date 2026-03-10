@@ -3,7 +3,7 @@ package Izan_33804;
 import java.util.List;
 import giis.demo.util.Database;
 
-public class IncidenciasModel {
+public class CambioEstadoModel {
     private Database db = new Database();
 
     public List<IncidenciaDisplayDTO> getIncidenciasAsignadas(String email) {
