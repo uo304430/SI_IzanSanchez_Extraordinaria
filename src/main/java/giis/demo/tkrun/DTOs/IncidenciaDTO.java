@@ -50,4 +50,9 @@ public class IncidenciaDTO {
     public String getEstadoNombre() {
         return ConsultaModel.nombreDeEstado(this.estado);
     }
+
+    // Derived getter to expose the human-readable tipo name for UI/table use
+    public String getTipoNombre() {
+        return ConsultaModel.nombreDeTipo(this.tipo);
+    }
 }

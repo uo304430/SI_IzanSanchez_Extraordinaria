@@ -112,9 +112,10 @@ public class ConsultaView {
         if (incidencias != null) {
             for (IncidenciaDTO d: incidencias) {
                 Object estadoNombre = d.getEstadoNombre();
+                Object tipoNombre = d.getTipoNombre();
                 LocalDateTime fh = d.getFechaHoraRegistro();
                 String fhStr = (fh == null) ? "" : fh.format(dtf);
-                m.addRow(new Object[] { d.getId(), d.getTipo(), d.getDescripcion(), fhStr, estadoNombre });
+                m.addRow(new Object[] { d.getId(), tipoNombre, d.getDescripcion(), fhStr, estadoNombre });
             }
         }
         tabla.setModel(m);

@@ -77,4 +77,17 @@ public class ConsultaModel {
             return "";
         }
     }
+
+    public static String nombreDeTipo(Integer id) {
+        if (id == null) return "";
+        try {
+            Database db = new Database();
+            List<Object[]> rows = db.executeQueryArray("SELECT nombre FROM Tipos WHERE id=?", id);
+            if (rows == null || rows.isEmpty() || rows.get(0) == null || rows.get(0).length == 0 || rows.get(0)[0] == null)
+                return "";
+            return rows.get(0)[0].toString();
+        } catch (Exception e) {
+            return "";
+        }
+    }
 }
