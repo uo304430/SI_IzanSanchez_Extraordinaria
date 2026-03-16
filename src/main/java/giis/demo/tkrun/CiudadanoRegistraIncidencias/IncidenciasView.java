@@ -5,8 +5,6 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.JRadioButton;
-import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import java.util.List;
@@ -26,14 +24,10 @@ import java.awt.event.ActionEvent;
  */
 public class IncidenciasView {
     private JFrame frame;
-    private JTextField txtEmail;
-    private JTextField txtDni;
     private JComboBox txtTipo;
     private JTextField txtDescripcion;
     private JTextField txtLocalizacion;
     private JButton btnRegistrar;
-    private JRadioButton rbEmail; // nueva
-    private JRadioButton rbDni;   // nueva
     private JLabel lblDescripcion;
     private JLabel lblLocalizacion;
 
@@ -47,72 +41,36 @@ public class IncidenciasView {
         frame.setName("Incidencias");
         frame.setBounds(0, 0, 640, 480);
         frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(new MigLayout("", "[grow]", "[][][][][][][][][][]") );
+        frame.getContentPane().setLayout(new MigLayout("", "[grow]", "[][][][][][]") );
 
-        frame.getContentPane().add(new JLabel("Identificación ciudadano:"), "cell 0 0");
-
-        // radio buttons + fields: only one identifier active at a time
-        rbEmail = new JRadioButton("Email");
-        rbDni = new JRadioButton("DNI");
-        ButtonGroup bg = new ButtonGroup();
-        bg.add(rbEmail);
-        bg.add(rbDni);
-        rbEmail.setSelected(true);
-
-        txtEmail = new JTextField();
-        txtEmail.setName("txtEmail");
-        txtDni = new JTextField();
-        txtDni.setText("12345678A");
-        txtDni.setName("txtDni");
-        // Default: email enabled, dni disabled
-        txtDni.setEnabled(false);
-
-        // Place radios and fields in same row
-        frame.getContentPane().add(rbEmail, "cell 0 1");
-        frame.getContentPane().add(txtEmail, "cell 0 1,growx");
-        frame.getContentPane().add(rbDni, "cell 0 1");
-        frame.getContentPane().add(txtDni, "cell 0 1,growx");
-
-        // Listeners to toggle field enablement
-        rbEmail.addActionListener(e -> {
-            txtEmail.setEnabled(true);
-            txtDni.setEnabled(false);
-        });
-        rbDni.addActionListener(e -> {
-            txtEmail.setEnabled(false);
-            txtDni.setEnabled(true);
-        });
-
-        frame.getContentPane().add(new JLabel("Tipo incidencia:"), "cell 0 2");
+        frame.getContentPane().add(new JLabel("Tipo incidencia:"), "cell 0 0");
 
         txtTipo = new JComboBox();
         txtTipo.setName("txtTipo");
-        frame.getContentPane().add(txtTipo, "cell 0 3,growx");
+        frame.getContentPane().add(txtTipo, "cell 0 1,growx");
         
         lblDescripcion = new JLabel("Descripcion:");
-        frame.getContentPane().add(lblDescripcion, "cell 0 4");
+        frame.getContentPane().add(lblDescripcion, "cell 0 2");
 
         txtDescripcion = new JTextField();
         txtDescripcion.setName("txtDescripcion");
-        frame.getContentPane().add(txtDescripcion, "cell 0 5,growx");
+        frame.getContentPane().add(txtDescripcion, "cell 0 3,growx");
         
         lblLocalizacion = new JLabel("Localizacion:");
-        frame.getContentPane().add(lblLocalizacion, "cell 0 6");
+        frame.getContentPane().add(lblLocalizacion, "cell 0 4");
 
         txtLocalizacion = new JTextField();
         txtLocalizacion.setName("txtLocalizacion");
-        frame.getContentPane().add(txtLocalizacion, "cell 0 7,growx");
+        frame.getContentPane().add(txtLocalizacion, "cell 0 5,growx");
 
         btnRegistrar = new JButton("Registrar incidencia");
         btnRegistrar.setHorizontalTextPosition(SwingConstants.CENTER);
-        frame.getContentPane().add(btnRegistrar, "cell 0 8");
+        frame.getContentPane().add(btnRegistrar, "cell 0 6");
 
         // Tabla eliminada: la vista ahora solo contiene el formulario de registro
     }
 
     public JFrame getFrame() { return frame; }
-    public String getEmail() { return txtEmail.getText(); }
-    public String getDni() { return txtDni.getText(); }
     /** Devuelve el nombre del tipo seleccionado (o null si no hay ninguno) */
     public String getTipo() {
         Object it = txtTipo.getSelectedItem();
@@ -151,17 +109,10 @@ public class IncidenciasView {
     public void clearForm() {
         txtDescripcion.setText("");
         txtLocalizacion.setText("");
-        txtEmail.setText("");
-        txtDni.setText("");
-        txtDni.setEnabled(false);
-        txtEmail.setEnabled(true);
-        rbEmail.setSelected(true);
     }
     public String getDescripcion() { return txtDescripcion.getText(); }
     public String getLocalizacion() { return txtLocalizacion.getText(); }
     public JButton getBtnRegistrar() { return btnRegistrar; }
-    public boolean isEmailSelected() { return rbEmail.isSelected(); }
-    public boolean isDniSelected() { return rbDni.isSelected(); }
 
     // Helper class to hold id+name in the combobox
     private static class TipoItem {

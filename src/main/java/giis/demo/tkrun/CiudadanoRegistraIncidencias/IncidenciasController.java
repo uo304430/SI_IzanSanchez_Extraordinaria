@@ -12,10 +12,12 @@ import javax.swing.JOptionPane;
 public class IncidenciasController {
     private IncidenciasModel model;
     private IncidenciasView view;
+    private String identificacion;
 
-    public IncidenciasController(IncidenciasModel m, IncidenciasView v) {
+    public IncidenciasController(IncidenciasModel m, IncidenciasView v, String identificacion) {
         this.model = m;
         this.view = v;
+        this.identificacion = identificacion;
         this.initView();
         this.initController();
     }
@@ -42,7 +44,7 @@ public class IncidenciasController {
      * Ajusta los nombres de getters/setters de la view si fuese necesario.
      */
     public void registrarDesdeView() {
-        String identificador = view.isEmailSelected() ? view.getEmail().trim() : view.getDni().trim();
+        String identificador = identificacion == null ? "" : identificacion.trim();
         // if (identificador == null || identificador.isEmpty()) {
         //     JOptionPane.showMessageDialog(view.getFrame(), "Debe indicar el email o DNI del ciudadano.", "Error de entrada", JOptionPane.ERROR_MESSAGE);
         //     return;

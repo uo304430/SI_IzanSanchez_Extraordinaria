@@ -13,10 +13,12 @@ import java.util.List;
 public class ConsultaController {
     private ConsultaModel model;
     private ConsultaView view;
+    private String identificacion;
 
-    public ConsultaController(ConsultaModel m, ConsultaView v) {
+    public ConsultaController(ConsultaModel m, ConsultaView v, String identificacion) {
         this.model = m;
         this.view = v;
+        this.identificacion = identificacion;
         this.initView();
         this.initController();
     }
@@ -35,7 +37,7 @@ public class ConsultaController {
     }
 
     public void consultarDesdeView() {
-        String identificador = view.isEmailSelected() ? view.getEmail().trim() : view.getDni().trim();
+        String identificador = identificacion == null ? "" : identificacion.trim();
         int estadoId = view.getSelectedEstadoId();
         List<IncidenciaDTO> resultados = model.getIncidenciasByUsuario(identificador, Integer.valueOf(estadoId));
         view.populateTable(resultados);
