@@ -7,6 +7,8 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
@@ -25,7 +27,7 @@ import java.awt.event.ActionEvent;
 public class IncidenciasView {
     private JFrame frame;
     private JComboBox txtTipo;
-    private JTextField txtDescripcion;
+    private JTextArea txtDescripcion;
     private JTextField txtLocalizacion;
     private JButton btnRegistrar;
     private JLabel lblDescripcion;
@@ -52,9 +54,12 @@ public class IncidenciasView {
         lblDescripcion = new JLabel("Descripcion:");
         frame.getContentPane().add(lblDescripcion, "cell 0 2");
 
-        txtDescripcion = new JTextField();
+        txtDescripcion = new JTextArea(4, 20);
         txtDescripcion.setName("txtDescripcion");
-        frame.getContentPane().add(txtDescripcion, "cell 0 3,growx");
+        txtDescripcion.setLineWrap(true);
+        txtDescripcion.setWrapStyleWord(true);
+        JScrollPane scrollDescripcion = new JScrollPane(txtDescripcion);
+        frame.getContentPane().add(scrollDescripcion, "cell 0 3,growx");
         
         lblLocalizacion = new JLabel("Localizacion:");
         frame.getContentPane().add(lblLocalizacion, "cell 0 4");
@@ -110,7 +115,7 @@ public class IncidenciasView {
         txtDescripcion.setText("");
         txtLocalizacion.setText("");
     }
-    public String getDescripcion() { return txtDescripcion.getText(); }
+    public String getDescripcion() { return txtDescripcion.getText().trim(); }
     public String getLocalizacion() { return txtLocalizacion.getText(); }
     public JButton getBtnRegistrar() { return btnRegistrar; }
 
