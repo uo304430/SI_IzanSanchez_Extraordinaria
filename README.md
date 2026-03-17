@@ -85,3 +85,59 @@ A continuación se describen y se indican las posibles personalizaciones a reali
   si no se ha configurado el repositorio para ello, por lo que se puede eliminar.
 - `.github/dependabot.yml`: Permite que Dependabot cree una pull request cuando hay alguna dependencia
   que precisa actualización. Se recomienda mantenerlo y hacer merge de las pull requests que se creen.
+
+# DB schema
+``` mermaid
+erDiagram
+  HistorialIncidencia {
+    INTEGER id
+    DATETIME fecha
+    VARCHAR accion
+    VARCHAR comentario
+  }
+  Usuarios {
+    INT id
+    VARCHAR nombre
+    VARCHAR email
+    VARCHAR dni
+  }
+  Incidencia {
+    INT id
+    VARCHAR descripcion
+    VARCHAR Coste
+    VARCHAR n
+    DATE fecha
+    BOOLEAN n
+  }
+  Tipos {
+    INTEGER id
+    VARCHAR nombre
+  }
+  Zonas {
+    INTEGER id
+    VARCHAR descripcion
+  }
+  Roles {
+    INT id
+    VARCHAR nombre
+  }
+  Estados {
+    INT id
+    VARCHAR nombre
+  }
+  TipoTecnico {
+    INTEGER id
+  }
+
+  Usuarios ||--o{ Roles : "Rol"
+  Incidencia ||--o{ Tipos : "Tipo"
+  Incidencia ||--o{ Zonas : "Zona"
+  Incidencia ||--o{ Usuarios : "Usuario"
+  Incidencia ||--o{ Usuarios : "Tecnico"
+  Incidencia ||--o{ Estados : "Estado"
+  HistorialIncidencia ||--o{ Incidencia : "Incidencia"
+  HistorialIncidencia ||--o{ Usuarios : "Tecnico"
+  HistorialIncidencia ||--o{ Estados : "Estado"
+  TipoTecnico ||--o{ Usuarios : "Usuario"
+  TipoTecnico ||--o{ Tipos : "Tipo"
+```

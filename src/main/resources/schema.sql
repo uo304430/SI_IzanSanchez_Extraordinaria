@@ -26,28 +26,35 @@ CREATE TABLE Usuarios (
     nombre VARCHAR(32) NOT NULL, 
     email VARCHAR(32) NOT NULL UNIQUE, 
     dni VARCHAR(32) NOT NULL, 
-    rol INT REFERENCES Roles(id)
+    FOREIGN KEY (rol) REFERENCES Roles(id)
 );
 
 CREATE TABLE Incidencia (
     id INT PRIMARY KEY NOT NULL, 
-    tipo INT REFERENCES Tipos(id), 
+    FOREIGN KEY (tipo) REFERENCES Tipos(id), 
     descripcion VARCHAR(32), 
-    localizacion VARCHAR(32), 
-    usuario INT REFERENCES Usuarios(id), 
-    tecnico INT REFERENCES Usuarios(id), 
+    FOREIGN KEY (localizacion) REFERENCES Zonas(id), 
+    FOREIGN KEY (usuario) REFERENCES Usuarios(id), 
+    FOREIGN KEY (tecnico) REFERENCES Usuarios(id), 
     Coste VARCHAR(32), 
     descr_reparación VARCHAR(32), 
     fecha DATE NOT NULL, 
-    estado INT REFERENCES Estados(id), 
+    FOREIGN KEY (estado) REFERENCES Estados(id), 
     validación BOOLEAN NOT NULL
 );
+
 CREATE TABLE HistorialIncidencia (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    incidencia INT NOT NULL REFERENCES Incidencia(id),
+    FOREIGN KEY (incidencia) REFERENCES Incidencia(id),
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
     accion VARCHAR(64) NOT NULL,
-    usuario INT REFERENCES Usuarios(id),
+    FOREIGN KEY (usuario) REFERENCES Usuarios(id),
     comentario VARCHAR(256),
-    estado INT REFERENCES Estados(id)
+    FOREIGN KEY (estado) REFERENCES Estados(id)
+);
+
+CREATE TABLE TipoTecnico (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    FOREIGN KEY (usuario) REFERENCES Usuarios(id),
+    FOREIGN KEY (tipo) REFERENCES Tipos(id)
 );
