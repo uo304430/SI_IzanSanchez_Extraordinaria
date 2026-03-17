@@ -3,6 +3,9 @@ package giis.demo.tkrun.OperadorValidaIncidencias;
 import giis.demo.util.SwingUtil;
 import giis.demo.util.ApplicationException;
 import giis.demo.tkrun.DTOs.IncidenciaDTO;
+import giis.demo.tkrun.OperarioRechazaIncidencia.RechazarOperarioController;
+import giis.demo.tkrun.OperarioRechazaIncidencia.RechazarOperarioModel;
+import giis.demo.tkrun.OperarioRechazaIncidencia.RechazarOperarioView;
 
 import javax.swing.JOptionPane;
 import java.util.List;
@@ -57,12 +60,12 @@ public class ValidarControler {
             JOptionPane.showMessageDialog(view.getFrame(), "Seleccione una incidencia para rechazar.", "Sin selección", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        int r = JOptionPane.showConfirmDialog(view.getFrame(), "¿Confirma que desea rechazar (cerrar) la incidencia seleccionada?", "Confirmar rechazo", JOptionPane.YES_NO_OPTION);
-        if (r != JOptionPane.YES_OPTION) return;
-
-        model.rechazarIncidencia(id, operadorIdentificacion);
-        List<IncidenciaDTO> incidencias = model.getIncidenciasPorValidar(operadorIdentificacion);
-        view.populateTable(incidencias);
-        JOptionPane.showMessageDialog(view.getFrame(), "Incidencia rechazada/cerrada correctamente.", "Operación completada", JOptionPane.INFORMATION_MESSAGE);
+        RechazarOperarioModel rm = new RechazarOperarioModel();
+        RechazarOperarioView rv = new RechazarOperarioView();
+        Runnable refresh = () -> {
+            List<IncidenciaDTO> incidencias = model.getIncidenciasPorValidar(operadorIdentificacion);
+            view.populateTable(incidencias);
+        };
+        new RechazarOperarioController(rm, rv, id, operadorIdentificacion, refresh);
     }
 }

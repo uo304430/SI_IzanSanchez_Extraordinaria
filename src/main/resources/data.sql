@@ -39,16 +39,16 @@ insert into Usuarios(id,nombre,email,dni,rol) values
 	(3,'María Pérez','maria.perez@example.com','11223344C',1);
 
 insert into Incidencia(id,tipo,descripcion,localizacion,usuario,tecnico,Coste,descr_reparación,fecha,estado,validación) values
-	(1,1,'Fallo en el servidor','Sala 1',1,2,'150','Reemplazo fuente','2016-12-01T10:00:00',1,false),
-	(2,2,'Error en la aplicación','Puesto 23',3,2,'0','Aplicado parche','2016-12-02T15:30:00',2,true);
-INSERT INTO HistorialIncidencia (incidencia, fecha, accion, comentario, estado)
-VALUES (1, '2016-12-01 09:00:00', 'Registro inicial', 'Registro inicial de la incidencia', 1);
+	(1,1,'Fallo en el servidor',1,1,2,'150','Reemplazo fuente','2016-12-01T10:00:00',1,false),
+	(2,2,'Error en la aplicación',3,3,2,'0','Aplicado parche','2016-12-02T15:30:00',2,true);
+INSERT INTO HistorialIncidencia (incidencia, fecha, accion, usuario, comentario, estado)
+VALUES (1, '2016-12-01 09:00:00', 'Registro inicial', 2, 'Registro inicial de la incidencia', 1);
 
-INSERT INTO HistorialIncidencia (incidencia, fecha, accion, comentario, estado)
-VALUES (1, '2016-12-01 10:30:00', 'Asignada', 'Asignada al técnico Carlos Ruiz', 3);
+INSERT INTO HistorialIncidencia (incidencia, fecha, accion, usuario, comentario, estado)
+VALUES (1, '2016-12-01 10:30:00', 'Asignada', 2, 'Asignada al técnico Carlos Ruiz', 3);
 
-INSERT INTO HistorialIncidencia (incidencia, fecha, accion, comentario, estado)
-VALUES (2, '2016-12-02 08:15:00', 'Registro inicial', 'Registro inicial de la incidencia', 1);
+INSERT INTO HistorialIncidencia (incidencia, fecha, accion, usuario, comentario, estado)
+VALUES (2, '2016-12-02 08:15:00', 'Registro inicial', 2, 'Registro inicial de la incidencia', 1);
 
-INSERT INTO HistorialIncidencia (incidencia, fecha, accion, comentario, estado)
-VALUES (2, '2016-12-02 11:00:00', 'Validada', 'Validada por operador', 2);
+INSERT INTO HistorialIncidencia (incidencia, fecha, accion, usuario, comentario, estado)
+VALUES (2, '2016-12-02 11:00:00', 'Validada', 2, 'Validada por operador', 2);

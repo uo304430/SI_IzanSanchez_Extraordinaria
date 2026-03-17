@@ -116,9 +116,8 @@ public class IncidenciasModel {
     
         if (descripcion == null || descripcion.trim().isEmpty())
             throw new ApplicationException("La descripción es obligatoria");
-        // validar zona y usar la descripcion almacenada en BD para registrar
+        // validar zona y usar su id para persistir, pero conservar descripcion para el DTO
         ZonaEntity zona = getZona(idZona);
-        String localizacion = zona.getDescripcion();
 
         getTipo(idTipo); // valida existencia
 
@@ -137,13 +136,14 @@ public class IncidenciasModel {
         // Ajustar tipos para la tabla (SQLite acepta null y valores string/num según columnas)
         db.executeUpdate(
             "INSERT INTO Incidencia(id,tipo,descripcion,localizacion,usuario,tecnico,Coste,descr_reparación,fecha,estado,validación) VALUES (?,?,?,?,?,?,?,?,?,1,0)",
-            Integer.valueOf(nextId), Integer.valueOf(idTipo), descripcion, localizacion, Integer.valueOf(usuario.getId()), null, "0", "", fechaHora.toString());
+            Integer.valueOf(nextId), Integer.valueOf(idTipo), descripcion, Integer.valueOf(idZona), Integer.valueOf(usuario.getId()), null, "0", "", fechaHora.toString());
 
         // Construir UsuarioDTO a partir de UsuarioEntity para incluir nombre en el DTO
         UsuarioDTO ciudadano = new UsuarioDTO(usuario.getId(), usuario.getNombre(), usuario.getEmail(), usuario.getDni(), usuario.getRol());
 
         // Crear IncidenciaDTO usando constructor existente (id,tipo,descripcion,localizacion,ciudadano,fechaHora,estado)
-        IncidenciaDTO dto = new IncidenciaDTO(Integer.valueOf(nextId), Integer.valueOf(idTipo), descripcion, localizacion, ciudadano, fechaHora, Integer.valueOf(1));
+        // El DTO mantiene la descripcion de la zona para mostrar en UI
+        IncidenciaDTO dto = new IncidenciaDTO(Integer.valueOf(nextId), Integer.valueOf(idTipo), descripcion, zona.getDescripcion(), ciudadano, fechaHora, Integer.valueOf(1));
 
         return dto;
     }

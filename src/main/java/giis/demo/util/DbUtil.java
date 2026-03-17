@@ -35,7 +35,11 @@ public abstract class DbUtil {
 	
 	/** Obtiene un objeto conexion para esta base de datos */
 	public Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(getUrl());
+		Connection cn = DriverManager.getConnection(getUrl());
+		try (Statement st = cn.createStatement()) {
+			st.execute("PRAGMA foreign_keys=ON");
+		}
+		return cn;
 	}
 
 	//Documentacion de apache dbutils:
