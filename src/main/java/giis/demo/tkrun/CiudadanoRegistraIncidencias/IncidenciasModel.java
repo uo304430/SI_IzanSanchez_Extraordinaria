@@ -8,6 +8,7 @@ import giis.demo.tkrun.DTOs.IncidenciaDTO;
 import giis.demo.tkrun.DTOs.UsuarioDTO;
 import giis.demo.tkrun.Entities.TipoIncidenciaEntity;
 import giis.demo.tkrun.Entities.UsuarioEntity;
+import giis.demo.tkrun.Entities.ZonaEntity;
 import giis.demo.util.ApplicationException;
 
 /**
@@ -22,14 +23,16 @@ public class IncidenciasModel {
     public IncidenciasModel() {
         // Asegurar que la tabla Usuarios y datos iniciales están presentes para el funcionamiento
         try {
-            List<Object[]> tables = db.executeQueryArray("SELECT name FROM sqlite_master WHERE type='table' AND name='Usuarios'");
-            boolean usuariosTableExists = (tables != null && !tables.isEmpty());
-            if (!usuariosTableExists) {
-                // crear esquema y cargar datos de ejemplo
+            List<Object[]> tablesUsuarios = db.executeQueryArray("SELECT name FROM sqlite_master WHERE type='table' AND name='Usuarios'");
+            List<Object[]> tablesZonas = db.executeQueryArray("SELECT name FROM sqlite_master WHERE type='table' AND name='Zonas'");
+            boolean usuariosTableExists = (tablesUsuarios != null && !tablesUsuarios.isEmpty());
+            boolean zonasTableExists = (tablesZonas != null && !tablesZonas.isEmpty());
+            if (!usuariosTableExists || !zonasTableExists) {
+                // crear esquema y cargar datos de ejemplo incluyendo la nueva tabla Zonas
                 db.createDatabase(false);
                 db.loadDatabase();
             } else {
-                // si la tabla existe, comprobar si contiene filas; si no, cargar datos
+                // si las tablas existen, comprobar si contiene filas; si no, cargar datos
                 List<Object[]> count = db.executeQueryArray("SELECT count(*) FROM Usuarios");
                 if (count != null && !count.isEmpty() && count.get(0)[0] != null) {
                     Number n = (Number) count.get(0)[0];
@@ -94,19 +97,28 @@ public class IncidenciasModel {
         return tipos.get(0);
     }
 
+    /** Valida que la zona exista y la devuelve. */
+    public ZonaEntity getZona(int idZona) {
+        List<ZonaEntity> zonas = db.executeQueryPojo(ZonaEntity.class, "SELECT id,descripcion FROM Zonas WHERE id=?", idZona);
+        if (zonas == null || zonas.isEmpty())
+            throw new ApplicationException("Zona no encontrada: " + idZona);
+        return zonas.get(0);
+    }
+
     /**
      * Registra una incidencia y devuelve un DTO con los datos básicos.
-     * Requisitos: usuario identificado; descripcion y localizacion obligatorias; tipo valido.
+    * Requisitos: usuario identificado; descripcion obligatoria; zona valida; tipo valido.
      * Asigna id nuevo calculando max(id)+1 y fecha actual (ISO).
      */
-    public IncidenciaDTO registrarIncidencia(String emailOrDni, int idTipo, String descripcion, String localizacion) {
+    public IncidenciaDTO registrarIncidencia(String emailOrDni, int idTipo, String descripcion, int idZona) {
     	
         UsuarioEntity usuario = findUsuario(emailOrDni);
     
         if (descripcion == null || descripcion.trim().isEmpty())
             throw new ApplicationException("La descripción es obligatoria");
-        if (localizacion == null || localizacion.trim().isEmpty())
-            throw new ApplicationException("La localización es obligatoria");
+        // validar zona y usar la descripcion almacenada en BD para registrar
+        ZonaEntity zona = getZona(idZona);
+        String localizacion = zona.getDescripcion();
 
         getTipo(idTipo); // valida existencia
 
@@ -124,8 +136,8 @@ public class IncidenciasModel {
         // Insercion: asignamos tecnico null, coste 0, descr_reparación vacío, estado = 1 (Nueva), validación = false
         // Ajustar tipos para la tabla (SQLite acepta null y valores string/num según columnas)
         db.executeUpdate(
-                "INSERT INTO Incidencia(id,tipo,descripcion,localizacion,usuario,tecnico,Coste,descr_reparación,fecha,estado,validación) VALUES (?,?,?,?,?,?,?,?,?,1,0)",
-                Integer.valueOf(nextId), Integer.valueOf(idTipo), descripcion, localizacion, Integer.valueOf(usuario.getId()), null, "0", "", fechaHora.toString());
+            "INSERT INTO Incidencia(id,tipo,descripcion,localizacion,usuario,tecnico,Coste,descr_reparación,fecha,estado,validación) VALUES (?,?,?,?,?,?,?,?,?,1,0)",
+            Integer.valueOf(nextId), Integer.valueOf(idTipo), descripcion, localizacion, Integer.valueOf(usuario.getId()), null, "0", "", fechaHora.toString());
 
         // Construir UsuarioDTO a partir de UsuarioEntity para incluir nombre en el DTO
         UsuarioDTO ciudadano = new UsuarioDTO(usuario.getId(), usuario.getNombre(), usuario.getEmail(), usuario.getDni(), usuario.getRol());
@@ -141,5 +153,10 @@ public class IncidenciasModel {
      */
     public java.util.List<TipoIncidenciaEntity> getAllTipos() {
         return db.executeQueryPojo(TipoIncidenciaEntity.class, "SELECT id,nombre FROM Tipos");
+    }
+
+    /** Devuelve la lista de zonas disponibles. */
+    public java.util.List<ZonaEntity> getAllZonas() {
+        return db.executeQueryPojo(ZonaEntity.class, "SELECT id,descripcion FROM Zonas ORDER BY id");
     }
 }

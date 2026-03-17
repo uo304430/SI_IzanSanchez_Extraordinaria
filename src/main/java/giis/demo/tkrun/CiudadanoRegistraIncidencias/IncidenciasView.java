@@ -3,7 +3,6 @@ package giis.demo.tkrun.CiudadanoRegistraIncidencias;
 import javax.swing.JFrame;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -16,6 +15,7 @@ import javax.swing.SwingConstants;
 
 import giis.demo.tkrun.DTOs.IncidenciaDTO;
 import giis.demo.tkrun.Entities.TipoIncidenciaEntity;
+import giis.demo.tkrun.Entities.ZonaEntity;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -28,7 +28,7 @@ public class IncidenciasView {
     private JFrame frame;
     private JComboBox txtTipo;
     private JTextArea txtDescripcion;
-    private JTextField txtLocalizacion;
+    private JComboBox cmbLocalizacion;
     private JButton btnRegistrar;
     private JLabel lblDescripcion;
     private JLabel lblLocalizacion;
@@ -64,9 +64,9 @@ public class IncidenciasView {
         lblLocalizacion = new JLabel("Localizacion:");
         frame.getContentPane().add(lblLocalizacion, "cell 0 4");
 
-        txtLocalizacion = new JTextField();
-        txtLocalizacion.setName("txtLocalizacion");
-        frame.getContentPane().add(txtLocalizacion, "cell 0 5,growx");
+        cmbLocalizacion = new JComboBox();
+        cmbLocalizacion.setName("cmbLocalizacion");
+        frame.getContentPane().add(cmbLocalizacion, "cell 0 5,growx");
 
         btnRegistrar = new JButton("Registrar incidencia");
         btnRegistrar.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -88,6 +88,18 @@ public class IncidenciasView {
         for (TipoIncidenciaEntity t: tipos){
             txtTipo.addItem(new TipoItem(t.getId(), t.getNombre()));
         }
+    }
+
+    /** Llena el combobox de zonas con la lista obtenida desde el modelo. */
+    public void populateZonas(List<ZonaEntity> zonas) {
+        cmbLocalizacion.removeAllItems();
+        // opción inicial nula
+        cmbLocalizacion.addItem(new ZonaItem(0, "Null"));
+        if (zonas==null) return;
+        for (ZonaEntity z : zonas) {
+            cmbLocalizacion.addItem(new ZonaItem(z.getId(), z.getDescripcion()));
+        }
+        cmbLocalizacion.setSelectedIndex(0);
     }
 
     /** Devuelve el id del tipo seleccionado o -1 si no hay ninguno */
@@ -113,10 +125,21 @@ public class IncidenciasView {
     /** Limpia campos del formulario (sin tocar lista de incidencias) */
     public void clearForm() {
         txtDescripcion.setText("");
-        txtLocalizacion.setText("");
+        if (cmbLocalizacion.getItemCount()>0) {
+            cmbLocalizacion.setSelectedIndex(0);
+        }
     }
     public String getDescripcion() { return txtDescripcion.getText().trim(); }
-    public String getLocalizacion() { return txtLocalizacion.getText(); }
+    public String getLocalizacion() {
+        Object o = cmbLocalizacion.getSelectedItem();
+        if (o instanceof ZonaItem) return ((ZonaItem)o).descripcion;
+        return o==null?"":o.toString();
+    }
+    public int getSelectedZonaId() {
+        Object o = cmbLocalizacion.getSelectedItem();
+        if (o instanceof ZonaItem) return ((ZonaItem)o).id;
+        return -1;
+    }
     public JButton getBtnRegistrar() { return btnRegistrar; }
 
     // Helper class to hold id+name in the combobox
@@ -125,6 +148,14 @@ public class IncidenciasView {
         private final String name;
         TipoItem(Integer id, String name) { this.id = id==null? -1: id.intValue(); this.name = name; }
         public String toString() { return name; }
+    }
+
+    // Helper class to hold id+description in the combobox de zonas
+    private static class ZonaItem {
+        private final int id;
+        private final String descripcion;
+        ZonaItem(Integer id, String descripcion) { this.id = id==null? -1: id.intValue(); this.descripcion = descripcion; }
+        public String toString() { return descripcion; }
     }
 
 }

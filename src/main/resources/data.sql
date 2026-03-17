@@ -23,6 +23,16 @@ insert into Tipos(id,nombre) values
 	(5,'señalización'),
 	(6,'calzada');
 
+insert into Zonas(id,descripcion) values
+	(1,'Norte'),
+	(2,'Noreste'),
+	(3,'Este'),
+	(4,'Sureste'),
+	(5,'Sur'),
+	(6,'Suroeste'),
+	(7,'Oeste'),
+	(8,'Noroeste');
+
 insert into Usuarios(id,nombre,email,dni,rol) values
 	(1,'Ana López','ana.lopez@example.com','12345678A',3),
 	(2,'Carlos Ruiz','carlos.ruiz@example.com','87654321B',2),

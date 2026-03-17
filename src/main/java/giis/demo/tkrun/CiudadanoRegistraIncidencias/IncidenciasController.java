@@ -32,6 +32,7 @@ public class IncidenciasController {
         // primero poblar los tipos desde el modelo
         try {
             view.populateTipos(model.getAllTipos());
+            view.populateZonas(model.getAllZonas());
         } catch (Exception e) {
             // si hay error, envolver en ApplicationException para que SwingUtil lo muestre
             throw new ApplicationException("Error cargando tipos: " + e.getMessage());
@@ -55,10 +56,14 @@ public class IncidenciasController {
             return;
         }
 
-        String descripcion = view.getDescripcion().trim();
-        String localizacion = view.getLocalizacion().trim();
+        int idZona = view.getSelectedZonaId();
+        if (idZona <= 0) {
+            JOptionPane.showMessageDialog(view.getFrame(), "Debe seleccionar una localización.", "Error de entrada", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-        IncidenciaDTO dto = model.registrarIncidencia(identificador, idTipo, descripcion, localizacion);
+        String descripcion = view.getDescripcion().trim();
+        IncidenciaDTO dto = model.registrarIncidencia(identificador, idTipo, descripcion, idZona);
 
         // Mostrar confirmación en la vista (método a implementar en la vista)
         view.showConfirmation(dto);
