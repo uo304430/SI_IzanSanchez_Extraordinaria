@@ -80,6 +80,12 @@
 			<artifactId>miglayout</artifactId>
 			<version>3.7.4</version>
 		</dependency>
+		<!-- Date/time picker with calendar component -->
+		<dependency>
+			<groupId>com.github.lgooddatepicker</groupId>
+			<artifactId>LGoodDatePicker</artifactId>
+			<version>11.2.1</version>
+		</dependency>
 		
 		<!-- utilidades varias para manejo de objetos y json -->
 		<dependency>

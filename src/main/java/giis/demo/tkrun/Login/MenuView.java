@@ -19,6 +19,9 @@ import giis.demo.tkrun.OperadorValidaIncidencias.ValidarView;
 import giis.demo.tkrun.OperadorAsigna.AsignarController;
 import giis.demo.tkrun.OperadorAsigna.AsignarModel;
 import giis.demo.tkrun.OperadorAsigna.AsignarView;
+import giis.demo.tkrun.TecnicoAddsDetalles.TecnicoAddsDetallesView;
+import giis.demo.tkrun.TecnicoAddsDetalles.TecnicoAddsDetallesController;
+import giis.demo.tkrun.TecnicoAddsDetalles.TecnicoAddsDetallesModel;
 import Izan_33804.CambioEstadoController;
 import Izan_33804.CambioEstadoModel;
 import Izan_33804.CambioEstadoView;
@@ -33,7 +36,7 @@ import Izan_33805.HistorialView;
  * <ul>
  *   <li>Ciudadano  → Registrar Incidencias, Consultar Incidencias</li>
  *   <li>Operador   → Validar Incidencias, Asignar Incidencias</li>
- *   <li>Técnico    → Planificar Resolución, Visualizar Historial</li>
+ *   <li>Técnico    → Planificar Resolución, Visualizar Historial, Añadir Detalles (prueba)</li>
  * </ul>
  */
 public class MenuView {
@@ -115,6 +118,13 @@ public class MenuView {
             ctrl.initController();
         });
         frame.getContentPane().add(btnHistorial);
+
+        JButton btnAddDetalles = new JButton("Añadir Detalles (prueba)");
+        btnAddDetalles.setName("btnAddDetalles");
+        btnAddDetalles.setVisible(esTecnico);
+                btnAddDetalles.addActionListener(e ->
+                        new TecnicoAddsDetallesController(new TecnicoAddsDetallesModel(), new TecnicoAddsDetallesView(), identificacion));
+        frame.getContentPane().add(btnAddDetalles);
 
         frame.pack();
         frame.setMinimumSize(new java.awt.Dimension(280, 0));
