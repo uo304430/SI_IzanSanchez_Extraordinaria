@@ -90,6 +90,15 @@ public class AsignarView {
         try { return Integer.parseInt(v.toString()); } catch(Exception ex) { return -1; }
     }
 
+    public Integer getSelectedIncidenciaTipo() {
+        int r = tablaIncidencias.getSelectedRow();
+        if (r == -1) return null;
+        Object v = tablaIncidencias.getValueAt(r, 1);
+        if (v == null) return null;
+        if (v instanceof Number) return ((Number)v).intValue();
+        try { return Integer.parseInt(v.toString()); } catch(Exception ex) { return null; }
+    }
+
     public int getSelectedTecnicoId() {
         int r = tablaTecnicos.getSelectedRow();
         if (r == -1) return -1;
@@ -114,15 +123,28 @@ public class AsignarView {
         btnAsignar.setEnabled(false);
     }
 
-    public void populateTecnicos(List<UsuarioDTO> tecnicos) {
-        String[] cols = new String[] { "Id", "Nombre", "Email" };
+    /**
+     * Popula la tabla de técnicos con las filas devueltas por la query: id, nombre, email, carga
+     */
+    public void populateTecnicosFromQuery(List<Object[]> tecnicos) {
+        String[] cols = new String[] { "Id", "Nombre", "Email", "Carga" };
         DefaultTableModel m = new DefaultTableModel(cols, 0);
         if (tecnicos != null) {
-            for (UsuarioDTO u: tecnicos) {
-                m.addRow(new Object[] { u.getId(), u.getNombre(), u.getEmail() });
+            for (Object[] r: tecnicos) {
+                Object id = r.length>0? r[0] : null;
+                Object nombre = r.length>1? r[1] : null;
+                Object email = r.length>2? r[2] : null;
+                Object carga = r.length>5? r[5] : Integer.valueOf(0);
+                System.out.println("Técnico: " + nombre + ", Carga: " + carga);
+                m.addRow(new Object[] { id, nombre, email, carga });
             }
         }
         tablaTecnicos.setModel(m);
         btnAsignar.setEnabled(false);
+    }
+
+    // helper to allow controller to listen incidencia selection changes
+    public void addIncidenciaSelectionListener(ListSelectionListener l) {
+        tablaIncidencias.getSelectionModel().addListSelectionListener(l);
     }
 }

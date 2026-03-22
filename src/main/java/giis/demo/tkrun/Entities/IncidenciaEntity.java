@@ -4,7 +4,7 @@ public class IncidenciaEntity {
     private Integer id;
     private Integer tipo;
     private String descripcion;
-    private String localizacion;
+    private Integer localizacion;
     private Integer usuario;
     private Integer tecnico;
     private String coste;
@@ -19,8 +19,8 @@ public class IncidenciaEntity {
     public void setTipo(Integer tipo) { this.tipo = tipo; }
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    public String getLocalizacion() { return localizacion; }
-    public void setLocalizacion(String localizacion) { this.localizacion = localizacion; }
+    public Integer getLocalizacion() { return localizacion; }
+    public void setLocalizacion(Integer localizacion) { this.localizacion = localizacion; }
     public Integer getUsuario() { return usuario; }
     public void setUsuario(Integer usuario) { this.usuario = usuario; }
     public Integer getTecnico() { return tecnico; }

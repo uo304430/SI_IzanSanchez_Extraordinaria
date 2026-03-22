@@ -8,7 +8,7 @@ public class IncidenciaDTO {
     private Integer id;
     private Integer tipo;
     private String descripcion;
-    private String localizacion;
+    private Integer localizacion;
     private UsuarioDTO ciudadano;
     private UsuarioDTO tecnico;
     private LocalDateTime fechaHoraRegistro;
@@ -17,7 +17,7 @@ public class IncidenciaDTO {
     private String descripcionReparacion;
     private boolean validacion;
 
-    public IncidenciaDTO(Integer id, Integer tipo, String descripcion, String localizacion, UsuarioDTO ciudadano,
+    public IncidenciaDTO(Integer id, Integer tipo, String descripcion, Integer localizacion, UsuarioDTO ciudadano,
             LocalDateTime fechaHoraRegistro, Integer estado) {
         this.id = id;
         this.tipo = tipo;
@@ -31,7 +31,7 @@ public class IncidenciaDTO {
     public Integer getId() { return id; }
     public Integer getTipo() { return tipo; }
     public String getDescripcion() { return descripcion; }
-    public String getLocalizacion() { return localizacion; }
+    public Integer getLocalizacion() { return localizacion; }
     public UsuarioDTO getCiudadano() { return ciudadano; }
     public UsuarioDTO getTecnico() { return tecnico; }
     public LocalDateTime getFechaHoraRegistro() { return fechaHoraRegistro; }

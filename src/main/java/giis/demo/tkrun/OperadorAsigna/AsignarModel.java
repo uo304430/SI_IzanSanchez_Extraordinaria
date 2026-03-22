@@ -1,15 +1,15 @@
 package giis.demo.tkrun.OperadorAsigna;
 
-import giis.demo.util.Database;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import giis.demo.tkrun.CiudadanoRegistraIncidencias.IncidenciasModel;
 import giis.demo.tkrun.DTOs.IncidenciaDTO;
 import giis.demo.tkrun.DTOs.UsuarioDTO;
 import giis.demo.tkrun.Entities.IncidenciaEntity;
 import giis.demo.tkrun.Entities.UsuarioEntity;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import giis.demo.util.Database;
 
 public class AsignarModel {
     private Database db = new Database();
@@ -55,6 +55,37 @@ public class AsignarModel {
         return result;
     }
 
+    /**
+     * Devuelve los técnicos que están asociados al tipo de incidencia indicado
+     * junto con su carga total de incidencias asignadas actualmente.
+     * Cada fila del resultado contiene: id, nombre, email, carga(Integer).
+     */
+    public List<Object[]> getTecnicosConCargaParaTipo(Integer tipoId) {
+        String sql = "SELECT * FROM Usuarios u WHERE u.id IN (SELECT usuario FROM TipoTecnico WHERE tipo=?)";
+        List<Object> params = new ArrayList<>();
+        params.add(tipoId);
+        List<Object[]> rows = db.executeQueryArray(sql, params.toArray());
+        if (rows == null) return new ArrayList<>();
+
+        String countSql = "SELECT COUNT(*) FROM Incidencia WHERE tecnico=? AND estado IN (3, 4)";
+        
+        List<Object[]> result = new ArrayList<>();
+        for (Object[] row : rows) {
+            int tecnicoId = (Integer) row[0];
+            List<Object> countParams = new ArrayList<>();
+            countParams.add(tecnicoId);
+            List<Object[]> countResult = db.executeQueryArray(countSql, countParams.toArray());
+            int carga = (countResult != null && !countResult.isEmpty()) ? ((Number) countResult.get(0)[0]).intValue() : 0;
+            
+            Object[] resultRow = new Object[row.length + 1];
+            System.arraycopy(row, 0, resultRow, 0, row.length);
+            resultRow[row.length] = carga;
+            result.add(resultRow);
+        }
+        System.out.println("Técnicos con carga para el tipo " + tipoId + ": " + result.get(0)[5]);
+        return result;
+    }
+
     
     public void asignarIncidencia(int idIncidencia, int idTecnico, String operadorIdentificacion) {
         // actualizar incidencia
@@ -70,7 +101,7 @@ public class AsignarModel {
         UsuarioEntity operador = incM.findUsuario(operadorIdentificacion);
         int operadorId = operador.getId();
 
-        String insert = "INSERT INTO HistorialIncidencia(incidencia,fecha,accion,usuario,comentario) VALUES (?,?,?,?,?)";
+        String insert = "INSERT INTO HistorialIncidencia(incidencia,fecha,accion,usuario,comentario,estado) VALUES (?,?,?,?,?,?)";
         List<Object> ip = new ArrayList<>();
         ip.add(Integer.valueOf(idIncidencia));
         String now = LocalDateTime.now().toString();
@@ -78,6 +109,7 @@ public class AsignarModel {
         ip.add("Asignada");
         ip.add(Integer.valueOf(operadorId));
         ip.add("Asignada al tecnico id=" + idTecnico);
+        ip.add(Integer.valueOf(3)); // estado Asignada
         db.executeUpdate(insert, ip.toArray());
     }
 }

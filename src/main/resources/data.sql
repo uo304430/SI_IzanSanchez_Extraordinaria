@@ -3,7 +3,7 @@
 -- Datos de ejemplo para giis.demo.tkrun (Incidencias y usuarios)
 
 insert into Roles(id,nombre) values 
-	(1,'Admin'),
+	(1,'Técnico'),
 	(2,'Operador'),
 	(3,'Ciudadano');
 
@@ -54,3 +54,6 @@ VALUES (2, '2016-12-02 08:15:00', 'Registro inicial', 2, 'Registro inicial de la
 
 INSERT INTO HistorialIncidencia (incidencia, fecha, accion, usuario, comentario, estado)
 VALUES (2, '2016-12-02 11:00:00', 'Validada', 2, 'Validada por operador', 2);
+
+INSERT INTO TipoTecnico (tipo, usuario) 
+VALUES (2, 3);
