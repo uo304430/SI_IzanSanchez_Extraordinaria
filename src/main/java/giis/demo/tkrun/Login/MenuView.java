@@ -5,6 +5,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.WindowConstants;
+
+import EstadisticasIncidencias.InformeView;
+
 import java.awt.Font;
 
 import giis.demo.tkrun.CiudadanoRegistraIncidencias.IncidenciasController;
@@ -90,7 +93,7 @@ public class MenuView {
         btnValidar.addActionListener(e ->
                 new ValidarControler(new ValidarModel(), new ValidarView(), identificacion));
         frame.getContentPane().add(btnValidar);
-
+        
         JButton btnAsignar = new JButton("Asignar Incidencias");
         btnAsignar.setName("btnAsignar");
         btnAsignar.setVisible(esOperador);
@@ -108,6 +111,7 @@ public class MenuView {
             ctrl.initController();
         });
         frame.getContentPane().add(btnPlanificar);
+        
 
         JButton btnHistorial = new JButton("Visualizar Historial");
         btnHistorial.setName("btnHistorial");
@@ -118,6 +122,39 @@ public class MenuView {
             ctrl.initController();
         });
         frame.getContentPane().add(btnHistorial);
+        
+        
+        JButton btnInforme = new JButton("Informe de Incidencias");
+        btnInforme.setName("btnInforme");
+        btnInforme.setVisible(esTecnico); 
+        btnInforme.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                EstadisticasIncidencias.InformeModel model = new EstadisticasIncidencias.InformeModel();
+                EstadisticasIncidencias.InformeView view = new EstadisticasIncidencias.InformeView();
+                EstadisticasIncidencias.InformeController controller = new EstadisticasIncidencias.InformeController(model, view);
+                controller.initController();
+            }
+        });
+        
+        frame.getContentPane().add(btnInforme);
+        
+     // Código para SwingMain
+        JButton btnRechazo = new JButton("Rechazar Incidencias");
+        btnRechazo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                RechazoIncidencias.RechazoModel m = new RechazoIncidencias.RechazoModel();
+                RechazoIncidencias.RechazoView v = new RechazoIncidencias.RechazoView();
+                RechazoIncidencias.RechazoController c = new RechazoIncidencias.RechazoController(m, v);
+
+                // Conectamos botones de la vista con métodos del controlador
+                v.getBtnCargar().addActionListener(ev -> c.cargarDatos());
+                v.getBtnRechazar().addActionListener(ev -> c.ejecutarRechazo());
+
+                v.getFrame().setVisible(true);
+            }
+        });
+        frame.getContentPane().add(btnRechazo);
+        
 
         JButton btnAddDetalles = new JButton("Añadir Detalles (prueba)");
         btnAddDetalles.setName("btnAddDetalles");
@@ -131,5 +168,8 @@ public class MenuView {
         frame.setVisible(true);
     }
 
-    public JFrame getFrame() { return frame; }
+    public JFrame getFrame() { return frame;
+    
+    
+    }
 }

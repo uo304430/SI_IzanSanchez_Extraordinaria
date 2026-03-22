@@ -40,9 +40,9 @@ insert into Usuarios(id,nombre,email,dni,rol) values
 
 insert into Incidencia(id,tipo,descripcion,localizacion,usuario,tecnico,Coste,descr_reparación,fecha,estado,validación) values
 	(1,1,'Fallo en el servidor',1,1,2,'150','Reemplazo fuente','2016-12-01T10:00:00',1,false),
-	(2,2,'Error en la aplicación',3,3,2,'0','Aplicado parche','2016-12-02T15:30:00',2,true),
-	(3,3,'Fallo en el mobiliario',4,1,2,'200','Reemplazo elemento','2016-12-03T09:15:00',4,true);
+	(2,2,'Error en la aplicación',3,3,2,'0','Aplicado parche','2016-12-02T15:30:00',2,true);
 
+	
 INSERT INTO HistorialIncidencia (incidencia, fecha, accion, usuario, comentario, estado)
 VALUES (1, '2016-12-01 09:00:00', 'Registro inicial', 2, 'Registro inicial de la incidencia', 1);
 

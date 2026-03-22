@@ -82,7 +82,6 @@ public class SwingMain {
 			}
 		});
 		frame.getContentPane().add(btnCargarDatosIniciales);
-
 	}
 
 	public JFrame getFrame() { return this.frame; }
