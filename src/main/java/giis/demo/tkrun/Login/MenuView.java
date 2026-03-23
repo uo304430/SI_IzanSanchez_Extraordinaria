@@ -6,9 +6,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.WindowConstants;
 
-import EstadisticasIncidencias.InformeView;
 
 import java.awt.Font;
+import giis.demo.tkrun.ResolverCostes.ResolverCostesSelectorView;
+import giis.demo.tkrun.ResolverCostes.ResolverCostesSelectorController;
 
 import giis.demo.tkrun.CiudadanoRegistraIncidencias.IncidenciasController;
 import giis.demo.tkrun.CiudadanoRegistraIncidencias.IncidenciasModel;
@@ -111,6 +112,15 @@ public class MenuView {
             ctrl.initController();
         });
         frame.getContentPane().add(btnPlanificar);
+        
+        JButton btnResolverCostes = new JButton("Resolver Costes");
+        btnResolverCostes.setName("btnResolverCostes");
+        btnResolverCostes.setVisible(esTecnico);
+        btnResolverCostes.addActionListener(e -> {
+            ResolverCostesSelectorView sv = new ResolverCostesSelectorView();
+            new ResolverCostesSelectorController(sv, identificacion);
+        });
+        frame.getContentPane().add(btnResolverCostes);
         
 
         JButton btnHistorial = new JButton("Visualizar Historial");
