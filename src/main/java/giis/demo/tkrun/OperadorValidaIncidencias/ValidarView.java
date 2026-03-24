@@ -51,7 +51,7 @@ public class ValidarView {
         btnValidar.setEnabled(false);
         btnValidar.setHorizontalTextPosition(SwingConstants.CENTER);
 
-        btnRechazar = new JButton("Rechazar");
+        btnRechazar = new JButton("Rechazar incidencia");
         btnRechazar.setName("btnRechazar");
         btnRechazar.setEnabled(false);
         btnRechazar.setHorizontalTextPosition(SwingConstants.CENTER);
