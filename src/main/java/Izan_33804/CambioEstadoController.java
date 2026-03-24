@@ -56,7 +56,6 @@ public class CambioEstadoController {
             String horas = view.getTxtHoras().getText();
             String trabajos = view.getTxtTrabajos().getText();
 
-            // Verificamos que los campos no estén vacíos en la consola
             System.out.println("DEBUG: Procesando ID=" + idText + ", Horas=" + horas);
 
             if (idText.isEmpty() || horas.isEmpty()) {
@@ -66,10 +65,10 @@ public class CambioEstadoController {
 
             int id = Integer.parseInt(idText);
             
-            // Llamada al modelo
-            model.planificarIncidencia(id, horas, trabajos);
+            // LA CORRECCIÓN ESTÁ AQUÍ:
+            // Añadimos 'this.email' como cuarto parámetro para que coincida con el Modelo
+            model.planificarIncidencia(id, horas, trabajos, this.email);
             
-           
             giis.demo.util.SwingUtil.showMessage("¡Planificación Guardada! Estado actualizado a 'En proceso'.", "Éxito", 1);
             
             listar(); 
@@ -77,7 +76,7 @@ public class CambioEstadoController {
         } catch (NumberFormatException nfe) {
             giis.demo.util.SwingUtil.showMessage("El ID debe ser un número válido", "Error", 0);
         } catch (Exception ex) {
-            ex.printStackTrace(); // Crucial: mira la consola de Eclipse para ver el error real
+            ex.printStackTrace(); 
             giis.demo.util.SwingUtil.showMessage("Error SQL: " + ex.getMessage(), "Error", 0);
         }
     }

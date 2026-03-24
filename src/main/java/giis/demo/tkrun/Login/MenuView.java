@@ -147,6 +147,23 @@ public class MenuView {
         });
         frame.getContentPane().add(btnInforme);
         
+     // Código para SwingMain
+        JButton btnRechazo = new JButton("Rechazar Incidencias");
+        btnRechazo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                RechazoIncidencias.RechazoModel m = new RechazoIncidencias.RechazoModel();
+                RechazoIncidencias.RechazoView v = new RechazoIncidencias.RechazoView();
+                RechazoIncidencias.RechazoController c = new RechazoIncidencias.RechazoController(m, v);
+
+                // Conectamos botones de la vista con métodos del controlador
+                v.getBtnCargar().addActionListener(ev -> c.cargarDatos());
+                v.getBtnRechazar().addActionListener(ev -> c.ejecutarRechazo());
+
+                v.getFrame().setVisible(true);
+            }
+        });
+        frame.getContentPane().add(btnRechazo);
+       
 
         JButton btnAddDetalles = new JButton("Añadir Detalles (prueba)");
         btnAddDetalles.setName("btnAddDetalles");
@@ -154,6 +171,7 @@ public class MenuView {
                 btnAddDetalles.addActionListener(e ->
                         new TecnicoAddsDetallesController(new TecnicoAddsDetallesModel(), new TecnicoAddsDetallesView(), identificacion));
         frame.getContentPane().add(btnAddDetalles);
+
 
         frame.pack();
         frame.setMinimumSize(new java.awt.Dimension(280, 0));
