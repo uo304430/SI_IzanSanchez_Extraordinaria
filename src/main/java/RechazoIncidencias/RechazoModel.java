@@ -12,9 +12,14 @@ public class RechazoModel {
         return db.executeQueryArray(sql);
     }
 
-    public void actualizarRechazo(RechazoDTO dto) {
-        
-        String sql = "UPDATE Incidencia SET estado = 'Rechazada', descripcion = ? WHERE id = ?";
-        db.executeUpdate(sql, dto.getMotivo(), dto.getId());
+    public void actualizarRechazo(RechazoDTO dto, String identificacion) {
+        // Actualizamos el estado a 6 (Cerrada) para representar el rechazo y guardamos el motivo en la descripción
+        String sql = "UPDATE Incidencia SET estado = ?, descripcion = ? WHERE id = ?";
+        db.executeUpdate(sql, 6, dto.getMotivo(), dto.getId());
+
+        // Insertamos en historial la acción de rechazo, asociando el usuario por dni o email
+        String sqlLog = "INSERT INTO HistorialIncidencia (incidencia, accion, comentario, estado, usuario, fecha) " +
+                        "VALUES (?, ?, ?, ?, (SELECT id FROM Usuarios WHERE LOWER(dni)=LOWER(?) OR LOWER(email)=LOWER(?)), datetime('now'))";
+        db.executeUpdate(sqlLog, dto.getId(), "Rechazo", dto.getMotivo(), 6, identificacion, identificacion);
     }
 }

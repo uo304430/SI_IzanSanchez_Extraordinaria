@@ -4,6 +4,10 @@ import giis.demo.util.SwingUtil;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import RechazoIncidencias.RechazoController;
+import RechazoIncidencias.RechazoModel;
+import RechazoIncidencias.RechazoView;
+
 public class CambioEstadoController {
     private CambioEstadoModel model;
     private CambioEstadoView view;
@@ -40,7 +44,20 @@ public class CambioEstadoController {
             }
         });
 
-        
+        // 4. Nuevo: botón para abrir la ventana de Rechazo desde la vista de Planificar
+        view.getBtnRechazar().addActionListener(e -> {
+            System.out.println("DEBUG: Abriendo gestor de Rechazos desde Planificar (identificador: " + email + ")");
+            RechazoModel rm = new RechazoModel();
+            RechazoView rv = new RechazoView();
+            RechazoController rc = new RechazoController(rm, rv, this.email);
+
+            // Conectamos los botones de la vista de Rechazo con el controlador
+            rv.getBtnCargar().addActionListener(ev -> rc.cargarDatos());
+            rv.getBtnRechazar().addActionListener(ev -> rc.ejecutarRechazo());
+
+            rv.getFrame().setVisible(true);
+        });
+
         view.getFrame().setVisible(true);
         listar(); 
     }

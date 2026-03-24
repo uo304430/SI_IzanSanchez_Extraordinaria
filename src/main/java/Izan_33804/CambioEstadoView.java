@@ -8,6 +8,7 @@ public class CambioEstadoView {
     private JTable tabIncidencias;
     private JButton btnCargar;
     private JButton btnPlanificar;
+    private JButton btnRechazar; // <-- nuevo botón
     private JTextField txtId, txtHoras, txtTrabajos;
 
     public CambioEstadoView() {
@@ -36,12 +37,17 @@ public class CambioEstadoView {
 
         btnPlanificar = new JButton("Confirmar Planificación");
         frame.getContentPane().add(btnPlanificar, "cell 0 7,align center");
+
+        // Nuevo botón para abrir la ventana de Rechazo dentro de la vista de Planificar
+        btnRechazar = new JButton("Rechazar incidencia (abrir gestor de rechazos)");
+        frame.getContentPane().add(btnRechazar, "cell 0 8,align center, wrap");
     }
 
     public JFrame getFrame() { return frame; }
     public JTable getTablaIncidencias() { return tabIncidencias; }
     public JButton getBtnCargar() { return btnCargar; }
     public JButton getBtnPlanificar() { return btnPlanificar; }
+    public JButton getBtnRechazar() { return btnRechazar; }
     public JTextField getTxtId() { return txtId; }
     public JTextField getTxtHoras() { return txtHoras; }
     public JTextField getTxtTrabajos() { return txtTrabajos; }
