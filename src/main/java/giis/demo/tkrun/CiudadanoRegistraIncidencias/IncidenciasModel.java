@@ -143,7 +143,7 @@ public class IncidenciasModel {
 
         // Crear IncidenciaDTO usando constructor existente (id,tipo,descripcion,localizacion,ciudadano,fechaHora,estado)
         // El DTO mantiene la descripcion de la zona para mostrar en UI
-        IncidenciaDTO dto = new IncidenciaDTO(Integer.valueOf(nextId), Integer.valueOf(idTipo), descripcion, zona.getDescripcion(), ciudadano, fechaHora, Integer.valueOf(1));
+        IncidenciaDTO dto = new IncidenciaDTO(Integer.valueOf(nextId), Integer.valueOf(idTipo), descripcion, zona.getId(), ciudadano, fechaHora, Integer.valueOf(1));
 
         return dto;
     }
