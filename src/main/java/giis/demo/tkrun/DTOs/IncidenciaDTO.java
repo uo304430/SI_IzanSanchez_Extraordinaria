@@ -55,4 +55,9 @@ public class IncidenciaDTO {
     public String getTipoNombre() {
         return ConsultaModel.nombreDeTipo(this.tipo);
     }
+
+    // Derived getter to expose the human-readable localizacion (zona) name for UI/table use
+    public String getLocalizacionNombre() {
+        return ConsultaModel.nombreDeZona(this.localizacion);
+    }
 }
