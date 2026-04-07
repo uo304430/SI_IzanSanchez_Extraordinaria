@@ -7,6 +7,7 @@ import java.util.List;
 import giis.demo.util.ApplicationException;
 import giis.demo.util.Database;
 import giis.demo.tkrun.DTOs.IncidenciaDTO;
+import giis.demo.tkrun.DTOs.HistorialDTO;
 import giis.demo.tkrun.Entities.IncidenciaEntity;
 
 public class TecnicoAddsDetallesModel {
@@ -35,6 +36,14 @@ public class TecnicoAddsDetallesModel {
             result.add(dto);
         }
         return result;
+    }
+
+    public java.util.List<HistorialDTO> obtenerHistorial(int incidenciaId) {
+        String sql = "SELECT id, incidencia, fecha, accion, usuario, comentario, estado " +
+                     "FROM HistorialIncidencia WHERE incidencia = ? ORDER BY fecha DESC";
+        java.util.List<HistorialDTO> rows = db.executeQueryPojo(HistorialDTO.class, sql, Integer.valueOf(incidenciaId));
+        if (rows == null) return new ArrayList<>();
+        return rows;
     }
 
     public void añadirComentario(int incidenciaId, String comentario) {

@@ -1,6 +1,8 @@
 package giis.demo.tkrun.TecnicoAddsDetalles;
 import java.util.List;
 import giis.demo.tkrun.DTOs.IncidenciaDTO;
+import giis.demo.tkrun.DTOs.HistorialDTO;
+import java.util.List;
 
 public class TecnicoAddsDetallesController {
     private TecnicoAddsDetallesModel model;
@@ -25,5 +27,9 @@ public class TecnicoAddsDetallesController {
 
     public void añadirComentario(int incidenciaId, String comentario, String fechaComentario) {
         model.añadirComentario(incidenciaId, comentario, fechaComentario);
+    }
+
+    public List<HistorialDTO> obtenerHistorial(int incidenciaId) {
+        return model.obtenerHistorial(incidenciaId);
     }
 }
