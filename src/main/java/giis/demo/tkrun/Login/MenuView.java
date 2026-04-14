@@ -26,6 +26,9 @@ import giis.demo.tkrun.OperadorAsigna.AsignarView;
 import giis.demo.tkrun.TecnicoAddsDetalles.TecnicoAddsDetallesView;
 import giis.demo.tkrun.TecnicoAddsDetalles.TecnicoAddsDetallesController;
 import giis.demo.tkrun.TecnicoAddsDetalles.TecnicoAddsDetallesModel;
+import giis.demo.tkrun.ExportarHistórico.ExportarHistoricoController;
+import giis.demo.tkrun.ExportarHistórico.ExportarHistoricoModel;
+import giis.demo.tkrun.ExportarHistórico.ExportarHistoricoView;
 import Izan_33804.CambioEstadoController;
 import Izan_33804.CambioEstadoModel;
 import Izan_33804.CambioEstadoView;
@@ -101,6 +104,14 @@ public class MenuView {
         btnAsignar.addActionListener(e ->
                 new AsignarController(new AsignarModel(), new AsignarView(), identificacion));
         frame.getContentPane().add(btnAsignar);
+
+        // --- Botón para exportar historial (Operador y Técnico) ---
+        JButton btnExportarHistorial = new JButton("Exportar Historial (JSON)");
+        btnExportarHistorial.setName("btnExportarHistorial");
+        btnExportarHistorial.setVisible(esOperador || esTecnico);
+        btnExportarHistorial.addActionListener(e ->
+            new ExportarHistoricoController(new ExportarHistoricoModel(), new ExportarHistoricoView()));
+        frame.getContentPane().add(btnExportarHistorial);
 
         // --- Botones de TÉCNICO ---
         JButton btnPlanificar = new JButton("Planificar Resolución");
