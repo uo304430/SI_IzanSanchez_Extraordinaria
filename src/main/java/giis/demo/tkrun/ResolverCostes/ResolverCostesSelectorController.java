@@ -27,7 +27,7 @@ public class ResolverCostesSelectorController {
     private void listar() {
         List<IncidenciaDisplayDTO> lista = model.getIncidenciasAsignadas(tecnicoIdentificacion);
         System.out.println("tecnicoIdentificacion: " + tecnicoIdentificacion);
-        view.getTabla().setModel(SwingUtil.getTableModelFromPojos(lista, new String[]{"id","descripcion","estado"}));
+        view.getTabla().setModel(SwingUtil.getTableModelFromPojos(lista, new String[]{"id","descripcion","tipo","localizacion","usuario","tecnico","coste","descrReparacion","fecha","estado","validacion"}));
         SwingUtil.autoAdjustColumns(view.getTabla());
     }
 

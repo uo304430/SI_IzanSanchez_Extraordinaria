@@ -11,6 +11,7 @@ public class ResolverCostesController {
     private final int incidenciaId;
     private final String tecnicoIdentificacion;
     private final Runnable onSuccess;
+    private int step = 1; // 1=horas, 2=materiales
 
     public ResolverCostesController(ResolverCostesModel m, ResolverCostesView v, int incidenciaId, String tecnicoIdentificacion, Runnable onSuccess) {
         this.model = m;
@@ -28,9 +29,40 @@ public class ResolverCostesController {
         view.getBtnRemoveMaterial().addActionListener(e -> SwingUtil.exceptionWrapper(() -> view.removeSelectedMaterial()));
         view.getBtnConfirmar().addActionListener(e -> SwingUtil.exceptionWrapper(() -> confirmar()));
         view.getBtnCancelar().addActionListener(e -> SwingUtil.exceptionWrapper(() -> cancelar()));
+        view.getBtnSiguiente().addActionListener(e -> SwingUtil.exceptionWrapper(() -> siguientePaso()));
+        view.getBtnAtras().addActionListener(e -> SwingUtil.exceptionWrapper(() -> anteriorPaso()));
         // update total when fields change (simple approach: on focus loss)
         view.getTxtHoras().addActionListener(e -> view.updateTotal());
         view.getTxtCosteHora().addActionListener(e -> view.updateTotal());
+    }
+
+    private void siguientePaso() {
+        if (step != 1) return;
+        // validar horas y coste por hora antes de permitir materiales
+        int horas = 0;
+        double costeHora = 0.0;
+        try { horas = Integer.parseInt(view.getTxtHoras().getText()); } catch (Exception ex) { throw new ApplicationException("Horas inválidas."); }
+        try { costeHora = Double.parseDouble(view.getTxtCosteHora().getText()); } catch (Exception ex) { throw new ApplicationException("Coste por hora inválido."); }
+        // bloquear edición de horas y activar materiales
+        view.getTxtHoras().setEnabled(false);
+        view.getTxtCosteHora().setEnabled(false);
+        view.setMaterialsEnabled(true);
+        view.getBtnSiguiente().setEnabled(false);
+        view.getBtnAtras().setEnabled(true);
+        view.getBtnConfirmar().setEnabled(true);
+        step = 2;
+    }
+
+    private void anteriorPaso() {
+        if (step != 2) return;
+        // volver a editar horas y desactivar materiales
+        view.getTxtHoras().setEnabled(true);
+        view.getTxtCosteHora().setEnabled(true);
+        view.setMaterialsEnabled(false);
+        view.getBtnSiguiente().setEnabled(true);
+        view.getBtnAtras().setEnabled(false);
+        view.getBtnConfirmar().setEnabled(false);
+        step = 1;
     }
 
     private void addMaterial() {

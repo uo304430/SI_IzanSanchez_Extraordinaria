@@ -24,6 +24,8 @@ public class ResolverCostesView {
     private JTextField txtMatCoste;
     private JButton btnAddMaterial;
     private JButton btnRemoveMaterial;
+    private JButton btnSiguiente;
+    private JButton btnAtras;
     private JButton btnConfirmar;
     private JButton btnCancelar;
     private JTable tablaMateriales;
@@ -65,6 +67,12 @@ public class ResolverCostesView {
         frame.getContentPane().add(btnAddMaterial, "cell 1 4");
         frame.getContentPane().add(btnRemoveMaterial, "cell 2 4");
 
+        // navegación por pasos: primero horas, luego materiales
+        btnAtras = new JButton("Atrás");
+        btnSiguiente = new JButton("Siguiente: Materiales");
+        frame.getContentPane().add(btnAtras, "cell 0 5");
+        frame.getContentPane().add(btnSiguiente, "cell 3 5");
+
         tablaMateriales = new JTable();
         tablaMateriales.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablaMateriales.setModel(new DefaultTableModel(new String[] {"Nombre","Coste"}, 0));
@@ -79,6 +87,11 @@ public class ResolverCostesView {
         btnCancelar = new JButton("Cancelar");
         frame.getContentPane().add(btnConfirmar, "cell 1 5");
         frame.getContentPane().add(btnCancelar, "cell 2 5");
+
+        // estado inicial: solo paso 1 (horas)
+        setMaterialsEnabled(false);
+        btnAtras.setEnabled(false);
+        btnConfirmar.setEnabled(false);
 
         tablaMateriales.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -98,6 +111,8 @@ public class ResolverCostesView {
     public JTextField getTxtMatCoste() { return txtMatCoste; }
     public JButton getBtnAddMaterial() { return btnAddMaterial; }
     public JButton getBtnRemoveMaterial() { return btnRemoveMaterial; }
+    public JButton getBtnSiguiente() { return btnSiguiente; }
+    public JButton getBtnAtras() { return btnAtras; }
     public JButton getBtnConfirmar() { return btnConfirmar; }
     public JButton getBtnCancelar() { return btnCancelar; }
     public JTable getTablaMateriales() { return tablaMateriales; }
@@ -116,6 +131,15 @@ public class ResolverCostesView {
             m.removeRow(r);
             updateTotal();
         }
+    }
+
+    public void setMaterialsEnabled(boolean enabled) {
+        txtMatNombre.setEnabled(enabled);
+        txtMatCoste.setEnabled(enabled);
+        btnAddMaterial.setEnabled(enabled);
+        // mantener estado del botón eliminar según selección y habilitación
+        btnRemoveMaterial.setEnabled(enabled && tablaMateriales.getSelectedRow() != -1);
+        tablaMateriales.setEnabled(enabled);
     }
 
     public List<ResolverCostesModel.Material> getMateriales() {

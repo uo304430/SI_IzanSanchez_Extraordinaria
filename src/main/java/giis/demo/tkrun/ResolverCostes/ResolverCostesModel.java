@@ -24,9 +24,18 @@ public class ResolverCostesModel {
 
     public List<IncidenciaDisplayDTO> getIncidenciasAsignadas(String dni) {
     
-        String sql = "SELECT id, descripcion, estado FROM Incidencia " +
-                     "WHERE tecnico = (SELECT id FROM Usuarios WHERE dni = ?) " +
-                     "AND estado = 4";
+        String sql = "SELECT i.id, i.descripcion, " +
+                     "t.nombre AS tipo, z.descripcion AS localizacion, u.nombre AS usuario, tu.nombre AS tecnico, " +
+                     "i.Coste AS coste, i.descr_reparación AS descrReparacion, i.fecha, e.nombre AS estado, " +
+                     "CASE WHEN i.validación = 1 THEN 'Sí' ELSE 'No' END AS validacion " +
+                     "FROM Incidencia i " +
+                     "JOIN Estados e ON i.estado = e.id " +
+                     "JOIN Tipos t ON i.tipo = t.id " +
+                     "JOIN Zonas z ON i.localizacion = z.id " +
+                     "JOIN Usuarios u ON i.usuario = u.id " +
+                     "LEFT JOIN Usuarios tu ON i.tecnico = tu.id " +
+                     "WHERE i.tecnico = (SELECT id FROM Usuarios WHERE dni = ?) " +
+                     "AND i.estado = 4";
         return db.executeQueryPojo(IncidenciaDisplayDTO.class, sql, dni);
     }
 
