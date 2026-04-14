@@ -8,6 +8,8 @@ import javax.swing.WindowConstants;
 
 
 import java.awt.Font;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import giis.demo.tkrun.ResolverCostes.ResolverCostesSelectorView;
 import giis.demo.tkrun.ResolverCostes.ResolverCostesSelectorController;
 
@@ -35,6 +37,15 @@ import Izan_33804.CambioEstadoView;
 import Izan_33805.HistorialController;
 import Izan_33805.HistorialModel;
 import Izan_33805.HistorialView;
+import InformeEconomico.InformeEconomicoModel;
+import InformeEconomico.InformeEconomicoView;
+import InformeEconomico.InformeEconomicoController;
+import FacturaIncidencia.FacturaModel;
+import FacturaIncidencia.FacturaView;
+import FacturaIncidencia.FacturaController;
+import CierreIncidencias.CierreIncidenciasModel;
+import CierreIncidencias.CierreIncidenciasView;
+import CierreIncidencias.CierreIncidenciasController;
 
 /**
  * Ventana de menú principal con acciones dependientes del rol del usuario.
@@ -62,6 +73,7 @@ public class MenuView {
         boolean esCiudadano = "Ciudadano".equals(tipoUsuario);
         boolean esOperador  = "Operador".equals(tipoUsuario);
         boolean esTecnico   = "Técnico".equals(tipoUsuario);
+        boolean esGestor    = "Gestor Económico".equals(tipoUsuario);
 
         frame = new JFrame("Menú Principal — " + tipoUsuario);
         frame.setName("Menu");
@@ -144,7 +156,18 @@ public class MenuView {
         });
         frame.getContentPane().add(btnHistorial);
         
+        // --- NUEVO: Botón para Cerrar Incidencias (visible solo a Técnicos) ---
+        JButton btnCerrarIncidencia = new JButton("Cerrar Incidencia");
+        btnCerrarIncidencia.setName("btnCerrarIncidencia");
+        btnCerrarIncidencia.setVisible(esTecnico);
+        btnCerrarIncidencia.addActionListener(e -> {
+            CierreIncidenciasModel m = new CierreIncidenciasModel();
+            CierreIncidenciasView v = new CierreIncidenciasView();
+            CierreIncidenciasController c = new CierreIncidenciasController(m, v, identificacion);
+        });
+        frame.getContentPane().add(btnCerrarIncidencia);
         
+
         JButton btnInforme = new JButton("Informe de Incidencias");
         btnInforme.setName("btnInforme");
         btnInforme.setVisible(esTecnico); 
@@ -159,7 +182,8 @@ public class MenuView {
         frame.getContentPane().add(btnInforme);
         
      // Código para SwingMain
-        JButton btnRechazo = new JButton("Rechazar Incidencias");
+       /* JButton btnRechazo = new JButton("Rechazar Incidencias");
+        
         btnRechazo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 RechazoIncidencias.RechazoModel m = new RechazoIncidencias.RechazoModel();
@@ -173,7 +197,7 @@ public class MenuView {
                 v.getFrame().setVisible(true);
             }
         });
-        frame.getContentPane().add(btnRechazo);
+        frame.getContentPane().add(btnRechazo);*/
        
 
         JButton btnAddDetalles = new JButton("Añadir Detalles (prueba)");
@@ -183,6 +207,39 @@ public class MenuView {
                         new TecnicoAddsDetallesController(new TecnicoAddsDetallesModel(), new TecnicoAddsDetallesView(), identificacion));
         frame.getContentPane().add(btnAddDetalles);
 
+
+        // --- NUEVO: Botón para Informe Económico (visible solo a Gestor Económico) ---
+        JButton btnInformeEconomico = new JButton("Informe Económico");
+        btnInformeEconomico.setName("btnInformeEconomico");
+        btnInformeEconomico.setVisible(esGestor);
+        btnInformeEconomico.addActionListener(e -> {
+            try {
+                System.out.println("[DEBUG] Intentando abrir Informe Económico");
+                InformeEconomicoModel m = new InformeEconomicoModel();
+                InformeEconomicoView v = new InformeEconomicoView();
+                InformeEconomicoController c = new InformeEconomicoController(m, v);
+            } catch (Exception ex) {
+                // solo log en consola
+                ex.printStackTrace();
+            }
+        });
+        frame.getContentPane().add(btnInformeEconomico);
+
+        // --- NUEVO: Botón para Generar Factura (visible solo a Gestor Económico) ---
+        JButton btnFactura = new JButton("Generar Factura de Incidencia");
+        btnFactura.setName("btnFactura");
+        btnFactura.setVisible(esGestor);
+        btnFactura.addActionListener(e -> {
+            try {
+                FacturaModel fm = new FacturaModel();
+                FacturaView fv = new FacturaView();
+                FacturaController fc = new FacturaController(fm, fv, identificacion);
+                fc.initController();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        frame.getContentPane().add(btnFactura);
 
         frame.pack();
         frame.setMinimumSize(new java.awt.Dimension(280, 0));

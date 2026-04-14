@@ -2,11 +2,14 @@ package EstadisticasIncidencias;
 
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import java.time.LocalDate;
 
 public class InformeView {
     private JFrame frame;
     private JTable tabla;
-    private JTextField txtDesde, txtHasta;
+    private DatePicker dateDesde, dateHasta;
     private JComboBox<String> cbTipo, cbEstado, cbZona; // txtZona ahora es cbZona
     private JButton btnGenerar;
 
@@ -15,14 +18,22 @@ public class InformeView {
         frame.setBounds(100, 100, 850, 550);
         frame.getContentPane().setLayout(new MigLayout("", "[grow][grow][grow][grow]", "[][][][grow]"));
 
-        // Fila 0: Fechas
+        // Fila 0: Fechas (DatePickers)
         frame.getContentPane().add(new JLabel("Fecha Inicio (YYYY-MM-DD):"), "cell 0 0");
-        txtDesde = new JTextField("2010-01-01");
-        frame.getContentPane().add(txtDesde, "growx");
+        DatePickerSettings sDesde = new DatePickerSettings();
+        sDesde.setFormatForDatesCommonEra("yyyy-MM-dd");
+        dateDesde = new DatePicker(sDesde);
+        dateDesde.setDate(LocalDate.parse("2010-01-01"));
+        dateDesde.getComponentDateTextField().setEditable(false);
+        frame.getContentPane().add(dateDesde, "growx");
 
         frame.getContentPane().add(new JLabel("Fecha Fin (YYYY-MM-DD):"), "cell 2 0");
-        txtHasta = new JTextField("2026-12-31");
-        frame.getContentPane().add(txtHasta, "growx");
+        DatePickerSettings sHasta = new DatePickerSettings();
+        sHasta.setFormatForDatesCommonEra("yyyy-MM-dd");
+        dateHasta = new DatePicker(sHasta);
+        dateHasta.setDate(LocalDate.parse("2026-12-31"));
+        dateHasta.getComponentDateTextField().setEditable(false);
+        frame.getContentPane().add(dateHasta, "growx");
 
         // Fila 1: Filtros desplegables
         frame.getContentPane().add(new JLabel("Tipo:"), "cell 0 1");
@@ -50,8 +61,10 @@ public class InformeView {
     public JFrame getFrame() { return frame; }
     public JTable getTabla() { return tabla; }
     public JButton getBtnGenerar() { return btnGenerar; }
-    public String getDesde() { return txtDesde.getText(); }
-    public String getHasta() { return txtHasta.getText(); }
+    public String getDesde() { return dateDesde.getDate() != null ? dateDesde.getDate().toString() : ""; }
+    public String getHasta() { return dateHasta.getDate() != null ? dateHasta.getDate().toString() : ""; }
+    public LocalDate getDesdeLocalDate() { return dateDesde.getDate(); }
+    public LocalDate getHastaLocalDate() { return dateHasta.getDate(); }
     
     // Ahora devuelve el String seleccionado en el combo
     public String getZona() { return cbZona.getSelectedItem().toString(); }

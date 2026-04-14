@@ -3,6 +3,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import java.util.Properties;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.dbutils.DbUtils;
 
@@ -56,10 +58,28 @@ public class Database extends DbUtil {
 
 	/** 
 	 * Carga de datos iniciales a partir del script data.sql en src/main/properties
-	 * (si onlyOnce=true solo ejecutara el script la primera vez
+	 * Se evita ejecutar el script si la tabla Roles ya contiene filas para no causar
+	 * conflictos de clave primaria cuando la BD ya está inicializada.
 	 */
 	public void loadDatabase() {
-		executeScript(SQL_LOAD);
+		boolean needLoad = true;
+		try {
+			// Comprueba si la tabla Roles existe y tiene filas
+			List<Map<String, Object>> res = this.executeQueryMap("SELECT COUNT(*) as c FROM Roles");
+			if (!res.isEmpty() && res.get(0).get("c") != null) {
+				Object val = res.get(0).get("c");
+				long cnt = 0;
+				if (val instanceof Number) cnt = ((Number)val).longValue();
+				else cnt = Long.parseLong(val.toString());
+				if (cnt > 0) needLoad = false;
+			}
+		} catch (Exception e) {
+			// Si hay cualquier problema (tabla no existe, errores), asumimos que hay que cargar
+			needLoad = true;
+		}
+		if (needLoad) {
+			executeScript(SQL_LOAD);
+		}
 	}
 	
 }

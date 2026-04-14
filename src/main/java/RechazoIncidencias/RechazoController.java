@@ -56,19 +56,17 @@ public class RechazoController {
         }
 
         String id = view.getTabla().getValueAt(fila, 0).toString();
-        
-        // Ventana emergente para el motivo (Criterio de aceptación HU)
-        String motivo = JOptionPane.showInputDialog(view.getFrame(), 
-            "Escriba el motivo del rechazo (Mínimo 10 caracteres):", 
-            "Justificación Obligatoria", 
-            JOptionPane.WARNING_MESSAGE);
+
+        // Read motivo from inline text area instead of popup
+        String motivo = view.getMotivoText();
 
         if (motivo != null && motivo.trim().length() >= 10) {
             // Usamos la versión del modelo que acepta la identificación del usuario
             model.actualizarRechazo(new RechazoDTO(id, motivo), this.identificacion);
             JOptionPane.showMessageDialog(null, "Incidencia " + id + " rechazada con éxito.");
+            view.clearMotivo(); // Limpiar el motivo tras el rechazo
             cargarDatos(); // Recargamos para que desaparezca de la lista de pendientes
-        } else if (motivo != null) {
+        } else {
             JOptionPane.showMessageDialog(null, "Error: El motivo debe ser más descriptivo (min. 10 carac.)");
         }
     }

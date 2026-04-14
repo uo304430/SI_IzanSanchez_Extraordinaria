@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import giis.demo.tkrun.Login.LoginController;
 import giis.demo.tkrun.Login.LoginView;
+import FacturaIncidencia.FacturaModel;
 
 /**
  * Punto de entrada principal que incluye botones para la ejecucion de las pantallas
@@ -69,6 +70,13 @@ public class SwingMain {
 			public void actionPerformed(ActionEvent e) {
 				Database db=new Database();
 				db.createDatabase(false);
+				// Además de recrear el esquema, borrar facturas existentes para que se puedan regenerar
+				try {
+					FacturaModel fm = new FacturaModel();
+					fm.borrarTodasFacturas();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 		});
 		frame.getContentPane().add(btnInicializarBaseDeDatos);
@@ -79,6 +87,13 @@ public class SwingMain {
 				Database db=new Database();
 				db.createDatabase(false);
 				db.loadDatabase();
+				// Además, borrar facturas previas para asegurar estado limpio de pruebas
+				try {
+					FacturaModel fm = new FacturaModel();
+					fm.borrarTodasFacturas();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 		});
 		frame.getContentPane().add(btnCargarDatosIniciales);

@@ -6,6 +6,8 @@ DROP TABLE IF EXISTS Tipos;
 DROP TABLE IF EXISTS Zonas;
 DROP TABLE IF EXISTS HistorialIncidencia;
 DROP TABLE IF EXISTS TipoTecnico;
+DROP TABLE IF EXISTS Presupuestos;
+
 DROP TABLE IF EXISTS Incidencia_Tecnico;
 
 -- Create referenced (master) tables first
@@ -71,6 +73,15 @@ CREATE TABLE TipoTecnico (
     FOREIGN KEY (tipo) REFERENCES Tipos(id)
 );
 
+-- Tabla de presupuestos por tipo: periodo de vigencia y consumo acumulado
+CREATE TABLE Presupuestos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tipo INT NOT NULL,
+    presupuesto NUMERIC NOT NULL,
+    consumido NUMERIC DEFAULT 0,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE NOT NULL,
+    FOREIGN KEY (tipo) REFERENCES Tipos(id)
 -- Table to allow assigning multiple technicians to the same incidencia
 CREATE TABLE Incidencia_Tecnico (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

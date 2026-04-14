@@ -10,7 +10,7 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  * Vista de identificación de usuario.
- * Permite seleccionar el tipo de usuario (Ciudadano, Operador, Técnico)
+ * Permite seleccionar el tipo de usuario (Ciudadano, Operador, Técnico, Gestor Económico)
  * e introducir el email o DNI para continuar.
  */
 public class LoginView {
@@ -33,7 +33,7 @@ public class LoginView {
                 new MigLayout("insets 15", "[right][grow]", "[][][]"));
 
         frame.getContentPane().add(new JLabel("Tipo de usuario:"), "cell 0 0");
-        cmbTipo = new JComboBox<>(new String[]{"Ciudadano", "Operador", "Técnico"});
+        cmbTipo = new JComboBox<>(new String[]{"Ciudadano", "Operador", "Técnico", "Gestor Económico"});
         cmbTipo.setName("cmbTipo");
         frame.getContentPane().add(cmbTipo, "cell 1 0, growx");
 

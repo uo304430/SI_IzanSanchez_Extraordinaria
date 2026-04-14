@@ -5,7 +5,8 @@
 insert into Roles(id,nombre) values 
 	(1,'Técnico'),
 	(2,'Operador'),
-	(3,'Ciudadano');
+	(3,'Ciudadano'),
+	(4,'Gestor Económico');
 
 insert into Estados(id,nombre) values 
 	(1,'Nueva'),
@@ -62,7 +63,19 @@ VALUES (2, '2016-12-02 08:15:00', 'Registro inicial', 2, 'Registro inicial de la
 INSERT INTO HistorialIncidencia (incidencia, fecha, accion, usuario, comentario, estado)
 VALUES (2, '2016-12-02 11:00:00', 'Validada', 2, 'Validada por operador', 2);
 
+INSERT INTO HistorialIncidencia (incidencia, fecha, accion, usuario, comentario, estado)
+VALUES (5, '2026-04-01 10:05:00', 'Registro inicial', 1, 'Incidencia creada para pruebas de presupuesto', 5);
+
 INSERT INTO TipoTecnico (tipo, usuario) 
 VALUES (2, 3),
 	   (2, 4),
 	   (2, 5);
+     -- Presupuestos de ejemplo: un presupuesto anual vigente para cada tipo (consumido inicial 0)
+-- Usamos fechas amplias que incluyan la fecha actual
+insert into Presupuestos(tipo,presupuesto,consumido,fecha_inicio,fecha_fin) values
+(1, 1000, 0, '2026-01-01', '2026-12-31'),
+(2, 800, 0, '2026-01-01', '2026-12-31'),
+(3, 1200, 0, '2026-01-01', '2026-12-31'),
+(4, 1500, 0, '2026-01-01', '2026-12-31'),
+(5, 900, 0, '2026-01-01', '2026-12-31'),
+(6, 2000, 0, '2026-01-01', '2026-12-31');

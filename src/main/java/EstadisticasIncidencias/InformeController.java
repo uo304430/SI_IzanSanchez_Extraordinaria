@@ -2,6 +2,8 @@ package EstadisticasIncidencias;
 
 import giis.demo.util.SwingUtil;
 import java.util.List;
+import java.time.LocalDate;
+import javax.swing.JOptionPane;
 
 public class InformeController {
     private InformeModel model;
@@ -23,6 +25,18 @@ public class InformeController {
 
         // 2. Definimos la acción del botón Generar
         view.getBtnGenerar().addActionListener(e -> {
+            // Validar fechas
+            LocalDate desdeLD = view.getDesdeLocalDate();
+            LocalDate hastaLD = view.getHastaLocalDate();
+            if (desdeLD == null || hastaLD == null) {
+                JOptionPane.showMessageDialog(view.getFrame(), "Debe seleccionar ambas fechas (inicio y fin).", "Fecha inválida", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (!desdeLD.isBefore(hastaLD)) {
+                JOptionPane.showMessageDialog(view.getFrame(), "La fecha de inicio debe ser anterior a la fecha de fin.", "Rango de fechas inválido", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             // Obtenemos los datos filtrados
             List<IncidenciaReporteDTO> lista = model.getInforme(
                 view.getDesde(), 
@@ -32,9 +46,9 @@ public class InformeController {
                 view.getZona() // Ahora obtiene el String del JComboBox de la vista
             );
             
-            // 3. Actualizamos la tabla añadiendo la columna "zona" al final
+            // 3. Actualizamos la tabla añadiendo la columna "tipo" y la columna "zona" al final
             view.getTabla().setModel(SwingUtil.getTableModelFromPojos(lista, 
-                new String[]{"id", "fecha", "descripcion", "estado", "zona"}));
+                new String[]{"id", "fecha", "descripcion", "tipo", "estado", "zona"}));
         });
         
         view.getFrame().setVisible(true);
