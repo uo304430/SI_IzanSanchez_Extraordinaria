@@ -60,21 +60,39 @@ public class AsignarController {
 
     private void asignarSeleccionada() {
         int idInc = view.getSelectedIncidenciaId();
-        int idTec = view.getSelectedTecnicoId();
+        java.util.List<Integer> idsTec = view.getSelectedTecnicoIds();
         if (idInc == -1) {
             JOptionPane.showMessageDialog(view.getFrame(), "Seleccione una incidencia para asignar.", "Sin selección", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if (idTec == -1) {
-            JOptionPane.showMessageDialog(view.getFrame(), "Seleccione un técnico para asignar.", "Sin selección", JOptionPane.WARNING_MESSAGE);
+        if (idsTec == null || idsTec.isEmpty()) {
+            JOptionPane.showMessageDialog(view.getFrame(), "Seleccione al menos un técnico para asignar.", "Sin selección", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        int r = JOptionPane.showConfirmDialog(view.getFrame(), "¿Confirma que desea asignar la incidencia seleccionada al técnico?", "Confirmar asignación", JOptionPane.YES_NO_OPTION);
+        // obtain names directly from the model for the selected ids
+        java.util.Map<Integer,String> nameById = model.getNombresTecnicosByIds(idsTec);
+        StringBuilder listHtml = new StringBuilder("<html>Confirma que desea asignar la incidencia seleccionada a los siguientes técnicos:<br/>");
+        for (int i=0;i<idsTec.size();i++) {
+            Integer id = idsTec.get(i);
+            String n = nameById.get(id);
+            String display = (n == null) ? ("id=" + id) : (id + " - " + n);
+            listHtml.append("&nbsp;&nbsp;- ").append(display).append("<br/>");
+        }
+        listHtml.append("</html>");
+        int r = JOptionPane.showConfirmDialog(view.getFrame(), listHtml.toString(), "Confirmar asignación", JOptionPane.YES_NO_OPTION);
         if (r != JOptionPane.YES_OPTION) return;
-
-        model.asignarIncidencia(idInc, idTec, operadorIdentificacion);
+        model.asignarIncidencia(idInc, idsTec, operadorIdentificacion);
         List<IncidenciaDTO> incidencias = model.getIncidenciasParaAsignar(operadorIdentificacion);
         view.populateIncidencias(incidencias);
-        JOptionPane.showMessageDialog(view.getFrame(), "Incidencia asignada correctamente y registrado en el historial.", "Operación completada", JOptionPane.INFORMATION_MESSAGE);
+        // show success message with assigned names
+        StringBuilder names = new StringBuilder();
+        for (int i=0;i<idsTec.size();i++) {
+            Integer id = idsTec.get(i);
+            String n = nameById.get(id);
+            String display = (n == null) ? ("id=" + id) : (id + " - " + n);
+            if (i>0) names.append(", ");
+            names.append(display);
+        }
+        JOptionPane.showMessageDialog(view.getFrame(), "Incidencia asignada correctamente a: " + names.toString() + ". Registrado en el historial.", "Operación completada", JOptionPane.INFORMATION_MESSAGE);
     }
 }

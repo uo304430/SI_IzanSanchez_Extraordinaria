@@ -49,7 +49,12 @@ public class AsignarView {
 
         tablaTecnicos = new JTable();
         tablaTecnicos.setName("tablaTecnicos");
-        tablaTecnicos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        // Permite seleccionar varios técnicos a la vez:
+        // - Ctrl+Click para selección discontigua
+        // - Shift+Click para selección por rango
+        // Límite operativo: si un técnico tiene 3 o más incidencias asignadas
+        // se mostrará como "(completo)" y no será seleccionable/assignable.
+        tablaTecnicos.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         tablaTecnicos.setDefaultEditor(Object.class, null);
         JScrollPane spTec = new JScrollPane(tablaTecnicos);
         frame.getContentPane().add(spTec, "cell 1 1,growy");
@@ -60,12 +65,18 @@ public class AsignarView {
         btnAsignar.setHorizontalTextPosition(SwingConstants.CENTER);
         frame.getContentPane().add(btnAsignar, "cell 0 2");
 
+        // Visible instructions for the user about multi-selection and the 3-assignment limit
+        JLabel instrucciones = new JLabel("<html>Selecciona varios técnicos: <b>Ctrl+Click</b> (discontigua), <b>Shift+Click</b> (rango).<br/>" +
+            "Técnicos con 3 o más incidencias aparecen pero no pueden asignarse.</html>");
+        instrucciones.setName("lblInstruccionesAsignar");
+        frame.getContentPane().add(instrucciones, "cell 0 3, span 2");
+
         // enable assign button only when both selections present
         tablaIncidencias.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 boolean selInc = tablaIncidencias.getSelectedRow() != -1;
-                boolean selTec = tablaTecnicos.getSelectedRow() != -1;
+                boolean selTec = getSelectedTecnicoIds().size() > 0;
                 btnAsignar.setEnabled(selInc && selTec);
             }
         });
@@ -73,7 +84,7 @@ public class AsignarView {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 boolean selInc = tablaIncidencias.getSelectedRow() != -1;
-                boolean selTec = tablaTecnicos.getSelectedRow() != -1;
+                boolean selTec = getSelectedTecnicoIds().size() > 0;
                 btnAsignar.setEnabled(selInc && selTec);
             }
         });
@@ -107,6 +118,33 @@ public class AsignarView {
         try { return Integer.parseInt(v.toString()); } catch(Exception ex) { return -1; }
     }
 
+    /**
+     * Devuelve los ids de los técnicos seleccionados (puede ser varios).
+     * Ignora técnicos marcados como "(completo)" (carga >= 3) para que no
+     * puedan ser asignados.
+     * Controles de selección múltiple: Ctrl+Click (discontigua), Shift+Click (rango).
+     */
+    public java.util.List<Integer> getSelectedTecnicoIds() {
+        int[] rows = tablaTecnicos.getSelectedRows();
+        java.util.List<Integer> ids = new java.util.ArrayList<>();
+        for (int r : rows) {
+            Object v = tablaTecnicos.getValueAt(r, 0);
+            // carga is in column index 3; skip if carga >= 3
+            Object cargaObj = tablaTecnicos.getValueAt(r, 3);
+            int intCarga = 0;
+            if (cargaObj instanceof Number) intCarga = ((Number)cargaObj).intValue();
+            else if (cargaObj != null) {
+                try { intCarga = Integer.parseInt(cargaObj.toString()); } catch(Exception ex) { intCarga = 0; }
+            }
+            if (intCarga >= 3) continue;
+            if (v instanceof Number) ids.add(((Number)v).intValue());
+            else {
+                try { ids.add(Integer.valueOf(v.toString())); } catch(Exception ex) { }
+            }
+        }
+        return ids;
+    }
+
     public void populateIncidencias(List<IncidenciaDTO> incidencias) {
         String[] cols = new String[] { "Id", "Tipo", "Descripcion", "Fecha", "Estado" };
         DefaultTableModel m = new DefaultTableModel(cols, 0);
@@ -135,8 +173,20 @@ public class AsignarView {
                 Object nombre = r.length>1? r[1] : null;
                 Object email = r.length>2? r[2] : null;
                 Object carga = r.length>5? r[5] : Integer.valueOf(0);
-                System.out.println("Técnico: " + nombre + ", Carga: " + carga);
-                m.addRow(new Object[] { id, nombre, email, carga });
+                int intCarga = 0;
+                if (carga instanceof Number) intCarga = ((Number)carga).intValue();
+                else {
+                    try { intCarga = Integer.parseInt(carga.toString()); } catch(Exception ex) { intCarga = 0; }
+                }
+                System.out.println("Técnico: " + nombre + ", Carga: " + intCarga);
+                // show technicians even if they have carga >= 3, but mark them as completo
+                Object displayNombre = nombre;
+                Object displayCarga = Integer.valueOf(intCarga);
+                if (intCarga >= 3) {
+                    displayNombre = (nombre == null ? "(sin nombre)" : nombre.toString() + " (completo)");
+                    displayCarga = Integer.valueOf(intCarga);
+                }
+                m.addRow(new Object[] { id, displayNombre, email, displayCarga });
             }
         }
         tablaTecnicos.setModel(m);

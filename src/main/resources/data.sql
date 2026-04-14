@@ -36,13 +36,18 @@ insert into Zonas(id,descripcion) values
 insert into Usuarios(id,nombre,email,dni,rol) values
 	(1,'Ana López','ana.lopez@example.com','12345678A',3),
 	(2,'Carlos Ruiz','carlos.ruiz@example.com','87654321B',2),
-	(3,'María Pérez','maria.perez@example.com','11223344C',1);
+	(3,'María Pérez','maria.perez@example.com','11223344C',1),
+	(4,'Luis Gómez','luis.gomez@example.com','55667788D',1),
+	(5,'Sofía Martínez','sofia.martinez@example.com','99887766E',1);
 
 insert into Incidencia(id,tipo,descripcion,localizacion,usuario,tecnico,Coste,descr_reparación,fecha,estado,validación) values
 	(1,1,'Fallo en el servidor',1,1,2,'150','Reemplazo fuente','2016-12-01T10:00:00',1,false),
 	(2,2,'Error en la aplicación',3,3,2,'0','Aplicado parche','2016-12-02T15:30:00',2,true),
+	(3,3,'Fallo en la red',4,1,2,'200','Reemplazo cable','2016-12-03T09:00:00',4,false),
 	(4,4,'Problema en el sistema',5,1,2,'300','Reemplazo componente','2016-12-04T14:00:00',3,false),
-	(3,3,'Fallo en la red',4,1,2,'200','Reemplazo cable','2016-12-03T09:00:00',4,false);
+	(5,2,'Error en la base de datos',3,3,2,'0','Aplicado parche','2016-12-02T15:30:00',2,true),
+	(6,2,'Fallo en el hardware',2,1,2,'250','Reemplazo disco','2016-12-05T11:00:00',2,true),
+	(7,2,'Problema de rendimiento',1,3,2,'0','Optimización realizada','2016-12-06T16:30:00',2,true);
 
 	
 INSERT INTO HistorialIncidencia (incidencia, fecha, accion, usuario, comentario, estado)
@@ -58,4 +63,6 @@ INSERT INTO HistorialIncidencia (incidencia, fecha, accion, usuario, comentario,
 VALUES (2, '2016-12-02 11:00:00', 'Validada', 2, 'Validada por operador', 2);
 
 INSERT INTO TipoTecnico (tipo, usuario) 
-VALUES (2, 3);
+VALUES (2, 3),
+	   (2, 4),
+	   (2, 5);

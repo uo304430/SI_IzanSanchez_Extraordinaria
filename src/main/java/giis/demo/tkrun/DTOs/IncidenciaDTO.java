@@ -1,6 +1,8 @@
 package giis.demo.tkrun.DTOs;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import giis.demo.tkrun.CiudadanoConsulataIncidencias.ConsultaModel;
 
 /** Modelo de incidencia convertido a DTO */
@@ -11,6 +13,7 @@ public class IncidenciaDTO {
     private Integer localizacion;
     private UsuarioDTO ciudadano;
     private UsuarioDTO tecnico;
+    private List<UsuarioDTO> tecnicos = new ArrayList<>();
     private LocalDateTime fechaHoraRegistro;
     private Integer estado;
     private String coste;
@@ -41,6 +44,8 @@ public class IncidenciaDTO {
     public boolean isValidacion() { return validacion; }
 
     public void setTecnico(UsuarioDTO tecnico) { this.tecnico = tecnico; }
+    public List<UsuarioDTO> getTecnicos() { return tecnicos; }
+    public void setTecnicos(List<UsuarioDTO> tecnicos) { this.tecnicos = tecnicos; }
     public void setEstado(Integer estado) { this.estado = estado; }
     public void setCoste(String coste) { this.coste = coste; }
     public void setDescripcionReparacion(String descripcionReparacion) { this.descripcionReparacion = descripcionReparacion; }

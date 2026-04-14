@@ -55,60 +55,89 @@ public class AsignarModel {
         return result;
     }
 
+    /** Devuelve un mapa id->nombre para los técnicos indicados */
+    public java.util.Map<Integer,String> getNombresTecnicosByIds(java.util.List<Integer> ids) {
+        java.util.Map<Integer,String> m = new java.util.HashMap<>();
+        if (ids == null || ids.isEmpty()) return m;
+        StringBuilder sb = new StringBuilder();
+        for (int i=0;i<ids.size();i++) {
+            if (i>0) sb.append(',');
+            sb.append('?');
+        }
+        String sql = "SELECT id,nombre FROM Usuarios WHERE id IN (" + sb.toString() + ")";
+        java.util.List<Object> params = new java.util.ArrayList<>();
+        for (Integer id: ids) params.add(id);
+        List<Object[]> rows = db.executeQueryArray(sql, params.toArray());
+        if (rows == null) return m;
+        for (Object[] r: rows) {
+            if (r.length>1 && r[0] instanceof Number) m.put(((Number)r[0]).intValue(), r[1]==null? null: r[1].toString());
+        }
+        return m;
+    }
+
     /**
      * Devuelve los técnicos que están asociados al tipo de incidencia indicado
      * junto con su carga total de incidencias asignadas actualmente.
      * Cada fila del resultado contiene: id, nombre, email, carga(Integer).
      */
     public List<Object[]> getTecnicosConCargaParaTipo(Integer tipoId) {
-        String sql = "SELECT * FROM Usuarios u WHERE u.id IN (SELECT usuario FROM TipoTecnico WHERE tipo=?)";
+        // Query technicians for the given type and compute their current assignment load
+        // using Incidencia_Tecnico join, ordering from least to most assigned.
+        String sql = "SELECT u.id,u.nombre,u.email,u.dni,u.rol, COALESCE(c.carga,0) AS carga "
+                + "FROM Usuarios u "
+                + "JOIN TipoTecnico tt ON u.id=tt.usuario AND tt.tipo=? "
+                + "LEFT JOIN (SELECT it.tecnico, COUNT(*) AS carga FROM Incidencia_Tecnico it "
+                + "JOIN Incidencia i ON it.incidencia=i.id WHERE i.estado IN (3,4) GROUP BY it.tecnico) c "
+                + "ON u.id=c.tecnico "
+                + "WHERE tt.tipo=? "
+                + "ORDER BY carga ASC";
         List<Object> params = new ArrayList<>();
+        params.add(tipoId);
         params.add(tipoId);
         List<Object[]> rows = db.executeQueryArray(sql, params.toArray());
         if (rows == null) return new ArrayList<>();
 
-        String countSql = "SELECT COUNT(*) FROM Incidencia WHERE tecnico=? AND estado IN (3, 4)";
-        
-        List<Object[]> result = new ArrayList<>();
-        for (Object[] row : rows) {
-            int tecnicoId = (Integer) row[0];
-            List<Object> countParams = new ArrayList<>();
-            countParams.add(tecnicoId);
-            List<Object[]> countResult = db.executeQueryArray(countSql, countParams.toArray());
-            int carga = (countResult != null && !countResult.isEmpty()) ? ((Number) countResult.get(0)[0]).intValue() : 0;
-            
-            Object[] resultRow = new Object[row.length + 1];
-            System.arraycopy(row, 0, resultRow, 0, row.length);
-            resultRow[row.length] = carga;
-            result.add(resultRow);
-        }
-        System.out.println("Técnicos con carga para el tipo " + tipoId + ": " + result.get(0)[5]);
-        return result;
+        // rows already include carga as last column (index 5)
+        if (!rows.isEmpty()) System.out.println("Técnicos con carga para el tipo " + tipoId + ": " + rows.get(0)[5]);
+        return rows;
     }
 
-    
-    public void asignarIncidencia(int idIncidencia, int idTecnico, String operadorIdentificacion) {
-        // actualizar incidencia
-        String sql = "UPDATE Incidencia SET tecnico=?, estado=? WHERE id=?";
-        List<Object> params = new ArrayList<>();
-        params.add(Integer.valueOf(idTecnico));
-        params.add(Integer.valueOf(3)); // estado Asignada
+    /**
+     * Asigna una incidencia a varios técnicos: crea filas en Incidencia_Tecnico,
+     * actualiza el estado de la Incidencia a Asignada y registra una única entrada en HistorialIncidencia.
+     */
+    public void asignarIncidencia(int idIncidencia, java.util.List<Integer> idsTecnicos, String operadorIdentificacion) {
+        if (idsTecnicos == null || idsTecnicos.isEmpty()) return;
+
+        // actualizar estado de la incidencia a Asignada (las relaciones con técnicos están en Incidencia_Tecnico)
+        String sql = "UPDATE Incidencia SET estado=? WHERE id=?";
+        java.util.List<Object> params = new java.util.ArrayList<>();
+        params.add(Integer.valueOf(3));
         params.add(Integer.valueOf(idIncidencia));
         db.executeUpdate(sql, params.toArray());
 
-        // registrar historial
+        // insertar filas en Incidencia_Tecnico
+        String insertRel = "INSERT INTO Incidencia_Tecnico(incidencia, tecnico) VALUES (?,?)";
+        for (Integer t : idsTecnicos) {
+            java.util.List<Object> rp = new java.util.ArrayList<>();
+            rp.add(Integer.valueOf(idIncidencia));
+            rp.add(Integer.valueOf(t));
+            db.executeUpdate(insertRel, rp.toArray());
+        }
+
+        // registrar historial: una entrada que indica todos los técnicos asignados
         IncidenciasModel incM = new IncidenciasModel();
-        UsuarioEntity operador = incM.findUsuario(operadorIdentificacion);
+        giis.demo.tkrun.Entities.UsuarioEntity operador = incM.findUsuario(operadorIdentificacion);
         int operadorId = operador.getId();
 
         String insert = "INSERT INTO HistorialIncidencia(incidencia,fecha,accion,usuario,comentario,estado) VALUES (?,?,?,?,?,?)";
-        List<Object> ip = new ArrayList<>();
+        java.util.List<Object> ip = new java.util.ArrayList<>();
         ip.add(Integer.valueOf(idIncidencia));
-        String now = LocalDateTime.now().toString();
+        String now = java.time.LocalDateTime.now().toString();
         ip.add(now);
-        ip.add("Asignada");
+        ip.add("Asignada a varios técnicos");
         ip.add(Integer.valueOf(operadorId));
-        ip.add("Asignada al tecnico id=" + idTecnico);
+        ip.add("Asignada a tecnicos ids=" + idsTecnicos.toString());
         ip.add(Integer.valueOf(3)); // estado Asignada
         db.executeUpdate(insert, ip.toArray());
     }

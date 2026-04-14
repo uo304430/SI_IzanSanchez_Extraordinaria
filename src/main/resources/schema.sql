@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS Tipos;
 DROP TABLE IF EXISTS Zonas;
 DROP TABLE IF EXISTS HistorialIncidencia;
 DROP TABLE IF EXISTS TipoTecnico;
-
+DROP TABLE IF EXISTS Incidencia_Tecnico;
 
 -- Create referenced (master) tables first
 CREATE TABLE Tipos (
@@ -69,4 +69,13 @@ CREATE TABLE TipoTecnico (
     tipo INT NOT NULL,
     FOREIGN KEY (usuario) REFERENCES Usuarios(id),
     FOREIGN KEY (tipo) REFERENCES Tipos(id)
+);
+
+-- Table to allow assigning multiple technicians to the same incidencia
+CREATE TABLE Incidencia_Tecnico (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    incidencia INT NOT NULL,
+    tecnico INT NOT NULL,
+    FOREIGN KEY (incidencia) REFERENCES Incidencia(id),
+    FOREIGN KEY (tecnico) REFERENCES Usuarios(id)
 );
