@@ -2,6 +2,8 @@ package giis.demo.tkrun.ResolverCostes;
 
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import giis.demo.util.ApplicationException;
 import giis.demo.util.SwingUtil;
 
@@ -43,25 +45,18 @@ public class ResolverCostesController {
         double costeHora = 0.0;
         try { horas = Integer.parseInt(view.getTxtHoras().getText()); } catch (Exception ex) { throw new ApplicationException("Horas inválidas."); }
         try { costeHora = Double.parseDouble(view.getTxtCosteHora().getText()); } catch (Exception ex) { throw new ApplicationException("Coste por hora inválido."); }
-        // bloquear edición de horas y activar materiales
-        view.getTxtHoras().setEnabled(false);
-        view.getTxtCosteHora().setEnabled(false);
+        // pasar a paso 2 (materiales), conservar la información
+        view.showStep(2);
         view.setMaterialsEnabled(true);
-        view.getBtnSiguiente().setEnabled(false);
-        view.getBtnAtras().setEnabled(true);
-        view.getBtnConfirmar().setEnabled(true);
         step = 2;
+        view.updateTotal();
     }
 
     private void anteriorPaso() {
         if (step != 2) return;
-        // volver a editar horas y desactivar materiales
-        view.getTxtHoras().setEnabled(true);
-        view.getTxtCosteHora().setEnabled(true);
+        // volver a paso 1 (horas), conservar la información
+        view.showStep(1);
         view.setMaterialsEnabled(false);
-        view.getBtnSiguiente().setEnabled(true);
-        view.getBtnAtras().setEnabled(false);
-        view.getBtnConfirmar().setEnabled(false);
         step = 1;
     }
 
@@ -84,7 +79,37 @@ public class ResolverCostesController {
         try { horas = Integer.parseInt(view.getTxtHoras().getText()); } catch (Exception ex) { throw new ApplicationException("Horas inválidas."); }
         try { costeHora = Double.parseDouble(view.getTxtCosteHora().getText()); } catch (Exception ex) { throw new ApplicationException("Coste por hora inválido."); }
 
+        // obtener materiales y calcular totales para el resumen
         List<ResolverCostesModel.Material> materiales = view.getMateriales();
+        double totalMateriales = 0.0;
+        StringBuilder matList = new StringBuilder();
+        if (materiales != null && !materiales.isEmpty()) {
+            boolean first = true;
+            for (ResolverCostesModel.Material m : materiales) {
+                totalMateriales += m.coste;
+                if (!first) matList.append("\n");
+                matList.append(" - ").append(m.nombre).append(": ").append(m.coste);
+                first = false;
+            }
+        }
+        double totalHoras = horas * costeHora;
+        double total = totalHoras + totalMateriales;
+
+        // actualizar vista y mostrar resumen en popup de confirmación
+        view.updateTotal();
+        StringBuilder resumen = new StringBuilder();
+        resumen.append("Resumen de resolución de incidencia ID ").append(incidenciaId).append("\n\n");
+        resumen.append("Horas: ").append(horas).append("\n");
+        resumen.append("Coste/hora: ").append(costeHora).append("\n");
+        resumen.append("Total horas: ").append(totalHoras).append("\n\n");
+        resumen.append("Materiales (total: ").append(totalMateriales).append("):\n");
+        resumen.append(matList.length() == 0 ? " - (ninguno)" : matList.toString());
+        resumen.append("\n\nCoste total: ").append(total).append("\n\n");
+        resumen.append("¿Confirmar resolución y registro en historial?");
+
+        int opt = JOptionPane.showConfirmDialog(view.getFrame(), resumen.toString(), "Confirmar resolución", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        if (opt != JOptionPane.YES_OPTION) return;
+
         model.resolverIncidencia(incidenciaId, tecnicoIdentificacion, horas, costeHora, materiales);
         view.getFrame().dispose();
         if (onSuccess != null) onSuccess.run();

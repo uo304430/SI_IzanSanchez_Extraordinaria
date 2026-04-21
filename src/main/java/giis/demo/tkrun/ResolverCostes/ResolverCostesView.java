@@ -30,6 +30,12 @@ public class ResolverCostesView {
     private JButton btnCancelar;
     private JTable tablaMateriales;
     private JLabel lblTotal;
+    private JLabel lblId;
+    private JLabel lblHoras;
+    private JLabel lblCosteHora;
+    private JLabel lblMatNombre;
+    private JLabel lblMatCoste;
+    private JScrollPane scrollTabla;
 
     public ResolverCostesView() {
         initialize();
@@ -43,22 +49,27 @@ public class ResolverCostesView {
         // cuatro columnas para alinear correctamente campos y botones
         frame.getContentPane().setLayout(new MigLayout("", "[grow][grow][grow][grow]", "[][][][grow][]"));
 
-        frame.getContentPane().add(new JLabel("ID Incidencia:"), "cell 0 0, split 2");
+        lblId = new JLabel("ID Incidencia:");
+        frame.getContentPane().add(lblId, "cell 0 0, split 2");
         txtId = new JTextField(); txtId.setEditable(false);
         frame.getContentPane().add(txtId, "cell 1 0,growx");
 
-        frame.getContentPane().add(new JLabel("Horas:"), "cell 0 1");
+        lblHoras = new JLabel("Horas:");
+        frame.getContentPane().add(lblHoras, "cell 0 1");
         txtHoras = new JTextField("0");
         frame.getContentPane().add(txtHoras, "cell 1 1,growx");
-        frame.getContentPane().add(new JLabel("Coste/hora:"), "cell 2 1");
+        lblCosteHora = new JLabel("Coste/hora:");
+        frame.getContentPane().add(lblCosteHora, "cell 2 1");
         txtCosteHora = new JTextField("20");
         frame.getContentPane().add(txtCosteHora, "cell 3 1,growx");
 
         // material inputs en columnas separadas
-        frame.getContentPane().add(new JLabel("Material (nombre):"), "cell 0 2");
+        lblMatNombre = new JLabel("Material (nombre):");
+        frame.getContentPane().add(lblMatNombre, "cell 0 2");
         txtMatNombre = new JTextField();
         frame.getContentPane().add(txtMatNombre, "cell 1 2,growx");
-        frame.getContentPane().add(new JLabel("Coste:"), "cell 2 2");
+        lblMatCoste = new JLabel("Coste:");
+        frame.getContentPane().add(lblMatCoste, "cell 2 2");
         txtMatCoste = new JTextField();
         frame.getContentPane().add(txtMatCoste, "cell 3 2,growx");
 
@@ -77,11 +88,13 @@ public class ResolverCostesView {
         tablaMateriales.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablaMateriales.setModel(new DefaultTableModel(new String[] {"Nombre","Coste"}, 0));
         // la tabla ocupa las 4 columnas
-        frame.getContentPane().add(new JScrollPane(tablaMateriales), "cell 0 3, span 4, grow");
+        scrollTabla = new JScrollPane(tablaMateriales);
+        frame.getContentPane().add(scrollTabla, "cell 0 3, span 4, grow");
 
         lblTotal = new JLabel("Total: 0.0");
         lblTotal.setHorizontalTextPosition(SwingConstants.RIGHT);
-        frame.getContentPane().add(lblTotal, "cell 3 5,align right");
+        // mostrar el total encima del botón "Atrás"
+        frame.getContentPane().add(lblTotal, "cell 0 4,align left");
 
         btnConfirmar = new JButton("Confirmar resolución");
         btnCancelar = new JButton("Cancelar");
@@ -89,9 +102,7 @@ public class ResolverCostesView {
         frame.getContentPane().add(btnCancelar, "cell 2 5");
 
         // estado inicial: solo paso 1 (horas)
-        setMaterialsEnabled(false);
-        btnAtras.setEnabled(false);
-        btnConfirmar.setEnabled(false);
+        showStep(1);
 
         tablaMateriales.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -140,6 +151,33 @@ public class ResolverCostesView {
         // mantener estado del botón eliminar según selección y habilitación
         btnRemoveMaterial.setEnabled(enabled && tablaMateriales.getSelectedRow() != -1);
         tablaMateriales.setEnabled(enabled);
+    }
+
+    public void showStep(int step) {
+        boolean first = (step == 1);
+        // horas inputs and related
+        lblHoras.setEnabled(first);
+        txtHoras.setEnabled(first);
+        lblCosteHora.setEnabled(first);
+        txtCosteHora.setEnabled(first);
+        btnSiguiente.setVisible(first);
+        btnAtras.setVisible(!first);
+        // materials inputs and table
+        lblMatNombre.setVisible(!first);
+        txtMatNombre.setVisible(!first);
+        lblMatCoste.setVisible(!first);
+        txtMatCoste.setVisible(!first);
+        btnAddMaterial.setVisible(!first);
+        // mostrar siempre el botón eliminar en el paso de materiales; habilitar según selección
+        btnRemoveMaterial.setVisible(!first);
+        scrollTabla.setVisible(!first);
+        tablaMateriales.setEnabled(!first);
+        // confirmar only on second step
+        btnConfirmar.setVisible(!first);
+        // cancelar stays visible
+        btnCancelar.setVisible(true);
+        // total always visible
+        lblTotal.setVisible(true);
     }
 
     public List<ResolverCostesModel.Material> getMateriales() {
