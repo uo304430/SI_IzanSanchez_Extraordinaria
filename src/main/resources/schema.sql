@@ -82,6 +82,8 @@ CREATE TABLE Presupuestos (
     fecha_inicio DATE NOT NULL,
     fecha_fin DATE NOT NULL,
     FOREIGN KEY (tipo) REFERENCES Tipos(id)
+);
+
 -- Table to allow assigning multiple technicians to the same incidencia
 CREATE TABLE Incidencia_Tecnico (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
