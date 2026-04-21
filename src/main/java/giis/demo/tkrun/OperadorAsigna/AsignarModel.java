@@ -45,7 +45,7 @@ public class AsignarModel {
     public List<UsuarioDTO> getTecnicos() {
         String sql = "SELECT * FROM Usuarios WHERE rol=?";
         List<Object> params = new ArrayList<>();
-        params.add(Integer.valueOf(2));
+        params.add(Integer.valueOf(1));
         List<UsuarioEntity> rows = db.executeQueryPojo(UsuarioEntity.class, sql, params.toArray());
         List<UsuarioDTO> result = new ArrayList<>();
         if (rows == null) return result;
@@ -97,8 +97,7 @@ public class AsignarModel {
         List<Object[]> rows = db.executeQueryArray(sql, params.toArray());
         if (rows == null) return new ArrayList<>();
 
-        // rows already include carga as last column (index 5)
-        if (!rows.isEmpty()) System.out.println("Técnicos con carga para el tipo " + tipoId + ": " + rows.get(0)[5]);
+        System.out.println("Técnicos encontrados para el tipo " + tipoId + ": " + rows.size());
         return rows;
     }
 

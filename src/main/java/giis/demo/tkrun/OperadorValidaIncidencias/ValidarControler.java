@@ -25,6 +25,7 @@ public class ValidarControler {
 
     public void initView() {
         try {
+            view.populateTipos(model.getTiposIncidencia());
             List<IncidenciaDTO> incidencias = model.getIncidenciasPorValidar(operadorIdentificacion);
             view.populateTable(incidencias);
         } catch (Exception e) {
@@ -39,19 +40,29 @@ public class ValidarControler {
     }
 
     private void validarSeleccionada() {
-        int id = view.getSelectedIncidenciaId();
-        if (id == -1) {
+        IncidenciaDTO seleccionada = view.getSelectedIncidencia();
+        if (seleccionada == null) {
             JOptionPane.showMessageDialog(view.getFrame(), "Seleccione una incidencia para validar.", "Sin selección", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        int tipoSeleccionado = view.getSelectedTipoId();
+        if (tipoSeleccionado == -1) {
+            JOptionPane.showMessageDialog(view.getFrame(), "Seleccione un tipo válido para la incidencia.", "Tipo no seleccionado", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String tipoActual = seleccionada.getTipoNombre();
+        Object tipoElegido = view.getCbTipos().getSelectedItem();
+        String tipoDestino = tipoElegido == null ? "" : tipoElegido.toString();
         int r = JOptionPane.showConfirmDialog(view.getFrame(), "¿Confirma que desea validar la incidencia seleccionada?", "Confirmar validación", JOptionPane.YES_NO_OPTION);
         if (r != JOptionPane.YES_OPTION) return;
 
-        model.validarIncidencia(id, operadorIdentificacion);
+        model.validarIncidencia(seleccionada.getId(), tipoSeleccionado, operadorIdentificacion);
         // recargar lista
         List<IncidenciaDTO> incidencias = model.getIncidenciasPorValidar(operadorIdentificacion);
         view.populateTable(incidencias);
-        JOptionPane.showMessageDialog(view.getFrame(), "Incidencia validada correctamente.", "Operación completada", JOptionPane.INFORMATION_MESSAGE);
+        String mensaje = "Incidencia validada correctamente.\nTipo anterior: " + tipoActual + "\nTipo validado: " + tipoDestino;
+        JOptionPane.showMessageDialog(view.getFrame(), mensaje, "Operación completada", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void rechazarSeleccionada() {

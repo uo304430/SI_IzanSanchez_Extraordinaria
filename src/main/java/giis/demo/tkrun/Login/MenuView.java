@@ -31,6 +31,9 @@ import giis.demo.tkrun.TecnicoAddsDetalles.TecnicoAddsDetallesModel;
 import giis.demo.tkrun.ExportarHistórico.ExportarHistoricoController;
 import giis.demo.tkrun.ExportarHistórico.ExportarHistoricoModel;
 import giis.demo.tkrun.ExportarHistórico.ExportarHistoricoView;
+import giis.demo.tkrun.GestorEconomicoDefinePresupuesto.DefinePresupuestoControler;
+import giis.demo.tkrun.GestorEconomicoDefinePresupuesto.DefinePresupuestoModel;
+import giis.demo.tkrun.GestorEconomicoDefinePresupuesto.DefinePresupuestoView;
 import Izan_33804.CambioEstadoController;
 import Izan_33804.CambioEstadoModel;
 import Izan_33804.CambioEstadoView;
@@ -240,6 +243,18 @@ public class MenuView {
             }
         });
         frame.getContentPane().add(btnFactura);
+
+        JButton btnDefinirPresupuesto = new JButton("Definir Presupuesto");
+        btnDefinirPresupuesto.setName("btnDefinirPresupuesto");
+        btnDefinirPresupuesto.setVisible(esGestor);
+        btnDefinirPresupuesto.addActionListener(e -> {
+            try {
+                new DefinePresupuestoControler(new DefinePresupuestoModel(), new DefinePresupuestoView(), identificacion);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        frame.getContentPane().add(btnDefinirPresupuesto);
 
         frame.pack();
         frame.setMinimumSize(new java.awt.Dimension(280, 0));

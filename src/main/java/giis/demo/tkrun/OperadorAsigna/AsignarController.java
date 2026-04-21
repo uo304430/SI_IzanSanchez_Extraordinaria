@@ -1,6 +1,7 @@
 package giis.demo.tkrun.OperadorAsigna;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -47,10 +48,15 @@ public class AsignarController {
                     Integer tipo = view.getSelectedIncidenciaTipo();
                     System.out.println("Tipo de incidencia seleccionada: " + tipo);
                     if (tipo == null) {
-                        view.populateTecnicosFromQuery(new java.util.ArrayList<>());
+                        view.populateTecnicosFromQuery(new ArrayList<>());
                         return;
                     }
                     List<Object[]> tecnicos = model.getTecnicosConCargaParaTipo(tipo);
+                    if (tecnicos.isEmpty()) {
+                        System.out.println("No hay técnicos asociados al tipo de incidencia " + tipo);
+                        view.populateTecnicosFromQuery(new ArrayList<>());
+                        return;
+                    }
                     System.out.println("Ejemplo de técnico: " + tecnicos.get(0)[1] + ", Carga: " + tecnicos.get(0)[5]);
                     view.populateTecnicosFromQuery(tecnicos);
                 });

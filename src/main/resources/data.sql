@@ -14,7 +14,8 @@ insert into Estados(id,nombre) values
 	(3,'Asignada'),
 	(4,'En proceso'),
 	(5,'Resuelta'),
-	(6,'Cerrada');
+	(6,'Cerrada'),
+	(7,'Rechazada');
 
 insert into Tipos(id,nombre) values 
 	(1,'alumbrado'),
@@ -39,7 +40,8 @@ insert into Usuarios(id,nombre,email,dni,rol) values
 	(2,'Carlos Ruiz','carlos.ruiz@example.com','87654321B',2),
 	(3,'María Pérez','maria.perez@example.com','11223344C',1),
 	(4,'Luis Gómez','luis.gomez@example.com','55667788D',1),
-	(5,'Sofía Martínez','sofia.martinez@example.com','99887766E',1);
+	(5,'Sofía Martínez','sofia.martinez@example.com','99887766E',1),
+	(6,'Javier Fernández','javier.fernandez@example.com','44556677F',4);
 
 insert into Incidencia(id,tipo,descripcion,localizacion,usuario,tecnico,Coste,descr_reparación,fecha,estado,validación) values
 	(1,1,'Fallo en el servidor',1,1,2,'150','Reemplazo fuente','2016-12-01T10:00:00',1,false),
@@ -48,7 +50,10 @@ insert into Incidencia(id,tipo,descripcion,localizacion,usuario,tecnico,Coste,de
 	(4,4,'Problema en el sistema',5,1,2,'300','Reemplazo componente','2016-12-04T14:00:00',3,false),
 	(5,2,'Error en la base de datos',3,3,2,'0','Aplicado parche','2016-12-02T15:30:00',2,true),
 	(6,2,'Fallo en el hardware',2,1,2,'250','Reemplazo disco','2016-12-05T11:00:00',2,true),
-	(7,2,'Problema de rendimiento',1,3,2,'0','Optimización realizada','2016-12-06T16:30:00',2,true);
+	(7,2,'Problema de rendimiento',1,3,2,'0','Optimización realizada','2016-12-06T16:30:00',2,true),
+	(8,2,'Fallo en la seguridad',4,1,2,'400','Actualización de seguridad aplicada','2016-12-07T13:00:00',6,true),
+	(9,4,'Error en la interfaz',5,3,2,'0','Rediseño de interfaz realizado','2016-12-08T10:30:00',7,true),
+	(10,3,'Problema de compatibilidad',2,1,2,'150','Actualización de software realizada','2016-12-09T15:00:00',6,true);
 
 	
 INSERT INTO HistorialIncidencia (incidencia, fecha, accion, usuario, comentario, estado)
