@@ -196,9 +196,17 @@ public class FacturaModel {
 
     // BORRADO DE FACTURAS (uso administrativo/testing): elimina facturas y entradas de historial generadas por facturas
     public void borrarTodasFacturas() {
-        // Borrar filas de Factura
+        db.executeUpdate("PRAGMA foreign_keys = OFF");
+        try {
+            db.executeUpdate("DELETE FROM FacturaLinea");
+        } catch (Exception e) {
+            // ignorar si no existe
+        }
         db.executeUpdate("DELETE FROM Factura");
-        // Borrar entradas de historial cuyo comentario empiece por 'Factura generada:'
         db.executeUpdate("DELETE FROM HistorialIncidencia WHERE comentario LIKE 'Factura generada:%'");
+        db.executeUpdate("PRAGMA foreign_keys = ON");
+    }
+    public Database getDb() {
+        return db;
     }
 }

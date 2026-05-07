@@ -39,7 +39,7 @@ insert into Usuarios(id,nombre,email,dni,rol) values
 	(2,'Carlos Ruiz','carlos.ruiz@example.com','87654321B',2),
 	(3,'María Pérez','maria.perez@example.com','11223344C',1),
 	(4,'Luis Gómez','luis.gomez@example.com','55667788D',1),
-	(5,'Sofía Martínez','sofia.martinez@example.com','99887766E',1);
+	(5,'Sofía Martínez','sofia.martinez@example.com','99887766E',4);
 
 insert into Incidencia(id,tipo,descripcion,localizacion,usuario,tecnico,Coste,descr_reparación,fecha,estado,validación) values
 	(1,1,'Fallo en el servidor',1,1,2,'150','Reemplazo fuente','2016-12-01T10:00:00',1,false),
