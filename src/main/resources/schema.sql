@@ -188,7 +188,12 @@ CREATE TABLE Envio (
     idPuntoOrigen            INTEGER      NOT NULL,
     idPuntoDestino           INTEGER      NOT NULL,
     -- Estado y económico
-    estado                   VARCHAR(32)  NOT NULL DEFAULT 'REGISTRADO',
+    estado                   VARCHAR(32)  NOT NULL DEFAULT 'REGISTRADO'
+                                CHECK (estado IN ('REGISTRADO','PENDIENTE_ASIGNACION',
+                                                  'EN_RUTA','RECOGIDO','EN_TRANSITO',
+                                                  'EN_REPARTO','PENDIENTE_REENTREGA',
+                                                  'ENTREGADO','DEPOSITADO_EN_PUNTO',
+                                                  'EN_DEVOLUCION','CANCELADO')),
     costeCalculado           NUMERIC      NOT NULL,
     valorDeclarado           NUMERIC      NOT NULL DEFAULT 0,
     -- Fechas
@@ -250,7 +255,8 @@ CREATE TABLE TramoRuta (
     FOREIGN KEY (idRuta)         REFERENCES Ruta(id),
     FOREIGN KEY (idPuntoOrigen)  REFERENCES PuntoLogistico(id),
     FOREIGN KEY (idPuntoDestino) REFERENCES PuntoLogistico(id),
-    FOREIGN KEY (idVehiculo)     REFERENCES Vehiculo(id)
+    FOREIGN KEY (idVehiculo)     REFERENCES Vehiculo(id),
+    UNIQUE (idRuta, ordenSecuencia)
 );
 
 CREATE TABLE IntentoEntrega (
