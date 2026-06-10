@@ -65,7 +65,7 @@ public class Database extends DbUtil {
 		boolean needLoad = true;
 		try {
 			// Comprueba si la tabla Roles existe y tiene filas
-			List<Map<String, Object>> res = this.executeQueryMap("SELECT COUNT(*) as c FROM Roles");
+			List<Map<String, Object>> res = this.executeQueryMap("SELECT COUNT(*) as c FROM Rol");
 			if (!res.isEmpty() && res.get(0).get("c") != null) {
 				Object val = res.get(0).get("c");
 				long cnt = 0;
