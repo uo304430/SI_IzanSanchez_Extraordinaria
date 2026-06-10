@@ -190,12 +190,15 @@ CREATE TABLE Envio (
     -- Estado y económico
     estado                   VARCHAR(32)  NOT NULL DEFAULT 'REGISTRADO'
                                 CHECK (estado IN ('REGISTRADO','PENDIENTE_ASIGNACION',
-                                                  'EN_RUTA','RECOGIDO','EN_TRANSITO',
+                                                  'PENDIENTE_RECOGIDA','EN_RUTA','RECOGIDO','EN_TRANSITO',
                                                   'EN_REPARTO','PENDIENTE_REENTREGA',
                                                   'ENTREGADO','DEPOSITADO_EN_PUNTO',
                                                   'EN_DEVOLUCION','CANCELADO')),
     costeCalculado           NUMERIC      NOT NULL,
     valorDeclarado           NUMERIC      NOT NULL DEFAULT 0,
+    formaPago                VARCHAR(16)  NOT NULL DEFAULT 'EFECTIVO'
+                               CHECK (formaPago IN ('EFECTIVO','TARJETA','PENDIENTE')),
+    pagado                   BOOLEAN      NOT NULL DEFAULT 0,
     -- Fechas
     fechaCreacion            DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     fechaEstimadaEntrega     DATE,
