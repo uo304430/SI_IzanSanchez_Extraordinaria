@@ -2,6 +2,8 @@ package giis.demo.tkrun.paqueteria.envios;
 
 import giis.demo.util.Database;
 import giis.demo.util.UnexpectedException;
+import giis.demo.tkrun.paqueteria.rutas.AsignacionRutaService;
+import giis.demo.tkrun.paqueteria.rutas.ResultadoAsignacion;
 import giis.demo.tkrun.paqueteria.util.CalculadoraTarifa;
 import giis.demo.tkrun.paqueteria.util.ComboItem;
 import giis.demo.tkrun.paqueteria.util.GeneradorCodigos;
@@ -126,9 +128,13 @@ public class EnvioModel {
                     idEnvio, "REGISTRO_INICIAL", idEmpleado, idPuntoOrigen,
                     "REGISTRADO", "Envio registrado en oficina");
 
+            ResultadoAsignacion asignacion = new AsignacionRutaService().asignarRuta(idEnvio, conn);
+
             conn.commit();
             log.info("Envio registrado: {} codigoBarras={}", codigoEnvio, codigoBarras);
-            return new EnvioResumenDto(codigoEnvio, codigoBarras, dto.getCosteCalculado());
+            EnvioResumenDto resumen = new EnvioResumenDto(codigoEnvio, codigoBarras, dto.getCosteCalculado());
+            resumen.setAvisoSinRuta(!asignacion.isExito());
+            return resumen;
 
         } catch (SQLException e) {
             if (conn != null) {

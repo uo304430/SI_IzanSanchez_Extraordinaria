@@ -104,6 +104,10 @@ public class EnvioController {
         String msg = String.format(
                 "Envio registrado con exito.%nIdentificador: %s%nCodigo de barras: %s%nCoste cobrado: %.2f EUR",
                 resumen.getCodigoEnvio(), resumen.getCodigoBarras(), resumen.getCoste());
+        if (resumen.isAvisoSinRuta()) {
+            msg += "\n\nAVISO: Envio registrado pero pendiente de asignacion: no hay vehiculos"
+                 + "\ncompatibles disponibles en este momento. Un administrador lo revisara.";
+        }
 
         Object[] opciones = {"Aceptar", "Nuevo envio"};
         int resp = JOptionPane.showOptionDialog(view, msg, "Registro completado",
