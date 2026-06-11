@@ -2,7 +2,7 @@ package giis.demo.tkrun.paqueteria.seguimiento;
 
 import giis.demo.util.SwingUtil;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 import java.util.List;
 
 public class SeguimientoDetalleController {
@@ -45,9 +45,13 @@ public class SeguimientoDetalleController {
     }
 
     private void accionModificarEntrega() {
-        JOptionPane.showMessageDialog(view,
-                "La modificacion del lugar de entrega estara disponible en HU-05.",
-                "Funcionalidad pendiente", JOptionPane.INFORMATION_MESSAGE);
+        ModificacionEntregaModel modModel = new ModificacionEntregaModel();
+        EnvioDetalleDto detalle = model.getEnvioDetalle(idEnvio);
+        int modificaciones = detalle != null ? detalle.getModificacionesEntrega() : 0;
+        String codigo = detalle != null ? detalle.getCodigo() : "";
+
+        ModificacionEntregaView modView = new ModificacionEntregaView(view, codigo, modificaciones);
+        new ModificacionEntregaController(modView, modModel, idEnvio, this::cargarDatos);
     }
 
     private void accionCancelarEnvio() {

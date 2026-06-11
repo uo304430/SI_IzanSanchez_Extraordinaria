@@ -43,6 +43,8 @@ public class SeguimientoDetalleView extends JDialog {
     private JButton btnModificarEntrega;
     private JButton btnCancelarEnvio;
     private JButton btnCerrar;
+    private JLabel  lblModificaciones;
+    private JLabel  lblSinModificaciones;
 
     private static final String[] COL_TRAMOS     = {"Orden","Tipo","Origen","Destino","Vehiculo","Prevista","Real","Estado"};
     private static final String[] COL_HISTORIAL  = {"Fecha/Hora","Accion","Responsable","Punto","Comentario"};
@@ -207,14 +209,22 @@ public class SeguimientoDetalleView extends JDialog {
     }
 
     private JPanel buildBotones() {
-        btnModificarEntrega = new JButton("Modificar lugar de entrega");
-        btnCancelarEnvio    = new JButton("Cancelar envio");
-        btnCerrar           = new JButton("Cerrar");
+        btnModificarEntrega  = new JButton("Modificar lugar de entrega");
+        btnCancelarEnvio     = new JButton("Cancelar envio");
+        btnCerrar            = new JButton("Cerrar");
+        lblModificaciones    = new JLabel("Modificaciones realizadas: 0 de 3 permitidas");
+        lblSinModificaciones = new JLabel("El envio ya no admite modificaciones.");
+        lblSinModificaciones.setForeground(new Color(160, 80, 0));
+        lblSinModificaciones.setVisible(false);
 
-        JPanel p = new JPanel(new MigLayout("insets 10", "[][]push[]"));
-        p.add(btnModificarEntrega);
-        p.add(btnCancelarEnvio);
-        p.add(btnCerrar);
+        JPanel p = new JPanel(new MigLayout("insets 10, wrap 1", "[]"));
+        JPanel fila1 = new JPanel(new MigLayout("insets 0", "[][]push[]"));
+        fila1.add(btnModificarEntrega);
+        fila1.add(btnCancelarEnvio);
+        fila1.add(btnCerrar);
+        p.add(fila1, "growx");
+        p.add(lblModificaciones);
+        p.add(lblSinModificaciones);
         return p;
     }
 
@@ -235,11 +245,20 @@ public class SeguimientoDetalleView extends JDialog {
         lblDestinatarioTelefono.setText(dto.getDestinatarioTelefono());
         lblDireccion.setText(dto.getDireccionDestinatario());
 
-        // Habilitar "Modificar lugar de entrega" segun reglas de negocio
+        // Label contador de modificaciones
+        int mod = dto.getModificacionesEntrega();
+        lblModificaciones.setText("Modificaciones realizadas: " + mod + " de 3 permitidas");
+
+        // Habilitar boton segun reglas de negocio
         boolean estadoPermite = "REGISTRADO".equals(dto.getEstado())
                 || "EN_RUTA".equals(dto.getEstado())
                 || "EN_TRANSITO".equals(dto.getEstado());
-        btnModificarEntrega.setEnabled(estadoPermite && dto.getModificacionesEntrega() < 3);
+        boolean puedeModificar = estadoPermite && mod < 3;
+        btnModificarEntrega.setEnabled(puedeModificar);
+
+        // Aviso cuando el envio ya no admite modificaciones
+        boolean mostrarAviso = !estadoPermite;
+        lblSinModificaciones.setVisible(mostrarAviso);
     }
 
     public void poblarTramos(List<TramoListadoDto> tramos) {
@@ -288,6 +307,7 @@ public class SeguimientoDetalleView extends JDialog {
     public JButton getBtnModificarEntrega() { return btnModificarEntrega; }
     public JButton getBtnCancelarEnvio()    { return btnCancelarEnvio; }
     public JButton getBtnCerrar()           { return btnCerrar; }
+    public JLabel  getLblModificaciones()   { return lblModificaciones; }
 
     // ---- Color del estado del envio ----
 
