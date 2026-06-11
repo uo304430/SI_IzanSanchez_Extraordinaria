@@ -192,7 +192,7 @@ INSERT INTO TramoRuta (id, idRuta, ordenSecuencia, tipo,
                         idPuntoOrigen, idPuntoDestino, idVehiculo,
                         fechaPrevista, fechaReal, estado) VALUES
     (5, 2, 1, 'INTERMEDIO', 2, 5,  5, '2026-05-30 18:00:00', '2026-05-30 17:45:00', 'COMPLETADO'),
-    (6, 2, 2, 'INTERMEDIO', 5, 6,  4, '2026-05-31 10:00:00', NULL,                   'EN_TRANSITO');
+    (6, 2, 2, 'INTERMEDIO', 5, 6,  4, '2026-05-31 10:00:00', '2026-05-31 09:50:00', 'ALMACENADO');
 
 INSERT INTO TramoRuta (id, idRuta, ordenSecuencia, tipo,
                         idPuntoOrigen, idPuntoDestino, direccionDestino,

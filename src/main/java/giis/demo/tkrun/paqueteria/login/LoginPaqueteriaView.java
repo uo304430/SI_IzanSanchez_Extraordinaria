@@ -17,7 +17,7 @@ public class LoginPaqueteriaView extends JFrame {
 
         JPanel panel = new JPanel(new MigLayout("insets 20, wrap 2", "[right][grow, fill]", "[]10[]20[]"));
 
-        panel.add(new JLabel("Empleado:"));
+        panel.add(new JLabel("Usuario:"));
         cmbEmpleado = new JComboBox<>();
         panel.add(cmbEmpleado);
 

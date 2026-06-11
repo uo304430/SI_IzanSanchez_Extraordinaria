@@ -37,7 +37,8 @@ public class LoginPaqueteriaController {
                 empleado.getIdUsuario(),
                 empleado.getNombre(),
                 empleado.getIdPuntoLogistico(),
-                empleado.getCodigoPunto());
+                empleado.getCodigoPunto(),
+                empleado.getRol());
         view.dispose();
         new MenuPaqueteriaController(new MenuPaqueteriaView());
     }
