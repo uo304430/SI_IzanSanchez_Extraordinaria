@@ -49,22 +49,29 @@ public class RegistroEnvioView extends JDialog {
     public RegistroEnvioView(JFrame owner) {
         super(owner, "Registrar Envio", true);
         initComponents();
-        setSize(740, 760);
+        setSize(780, 810);
+        setMinimumSize(new Dimension(680, 720));
+        setResizable(true);
         setLocationRelativeTo(owner);
     }
 
     private void initComponents() {
-        JPanel main = new JPanel(new MigLayout("insets 12, wrap 1", "[grow, fill]"));
-        main.add(buildSeccionRemitente());
-        main.add(buildSeccionDestinatario());
-        main.add(buildSeccionPaquete());
-        main.add(buildSeccionOpciones());
-        main.add(buildSeccionAcciones());
+        // Secciones de datos: desplazables si la pantalla es pequena
+        JPanel data = new JPanel(new MigLayout("insets 12, wrap 1", "[grow, fill]"));
+        data.add(buildSeccionRemitente());
+        data.add(buildSeccionDestinatario());
+        data.add(buildSeccionPaquete());
+        data.add(buildSeccionOpciones());
 
-        JScrollPane scroll = new JScrollPane(main);
+        JScrollPane scroll = new JScrollPane(data);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        add(scroll);
+        scroll.setBorder(null);
+
+        // Panel de acciones siempre visible abajo
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(scroll, BorderLayout.CENTER);
+        getContentPane().add(buildSeccionAcciones(), BorderLayout.SOUTH);
     }
 
     private JPanel buildSeccionRemitente() {
