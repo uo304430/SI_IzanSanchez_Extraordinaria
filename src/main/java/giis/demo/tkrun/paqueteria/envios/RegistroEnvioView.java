@@ -49,12 +49,12 @@ public class RegistroEnvioView extends JDialog {
     public RegistroEnvioView(JFrame owner) {
         super(owner, "Registrar Envio", true);
         initComponents();
-        pack();
+        setSize(740, 760);
         setLocationRelativeTo(owner);
     }
 
     private void initComponents() {
-        JPanel main = new JPanel(new MigLayout("insets 10, wrap 1", "[grow, fill]"));
+        JPanel main = new JPanel(new MigLayout("insets 12, wrap 1", "[grow, fill]"));
         main.add(buildSeccionRemitente());
         main.add(buildSeccionDestinatario());
         main.add(buildSeccionPaquete());
@@ -62,7 +62,8 @@ public class RegistroEnvioView extends JDialog {
         main.add(buildSeccionAcciones());
 
         JScrollPane scroll = new JScrollPane(main);
-        scroll.setPreferredSize(new Dimension(660, 620));
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         add(scroll);
     }
 
