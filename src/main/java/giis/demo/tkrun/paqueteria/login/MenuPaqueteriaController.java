@@ -7,6 +7,9 @@ import giis.demo.tkrun.paqueteria.almacen.CargaDescargaView;
 import giis.demo.tkrun.paqueteria.envios.EnvioController;
 import giis.demo.tkrun.paqueteria.envios.EnvioModel;
 import giis.demo.tkrun.paqueteria.envios.RegistroEnvioView;
+import giis.demo.tkrun.paqueteria.seguimiento.SeguimientoController;
+import giis.demo.tkrun.paqueteria.seguimiento.SeguimientoListadoView;
+import giis.demo.tkrun.paqueteria.seguimiento.SeguimientoModel;
 
 public class MenuPaqueteriaController {
 
@@ -21,8 +24,14 @@ public class MenuPaqueteriaController {
 
     private void initView() {
         SesionUsuario sesion = SesionUsuario.getInstance();
-        view.getLblSesion().setText("Sesion: " + sesion.getNombre() + " · " + sesion.getCodigoPunto());
+        if (sesion.isCliente()) {
+            view.getLblSesion().setText("Sesion: " + sesion.getNombre() + " (cliente)");
+        } else {
+            view.getLblSesion().setText("Sesion: " + sesion.getNombre() + " · " + sesion.getCodigoPunto());
+        }
+        view.getBtnRegistrarEnvio().setEnabled(!sesion.isCliente());
         view.getBtnCargaDescarga().setEnabled(sesion.isOperario());
+        view.getBtnMisEnvios().setEnabled(sesion.isCliente());
     }
 
     private void initListeners() {
@@ -30,6 +39,8 @@ public class MenuPaqueteriaController {
                 SwingUtil.exceptionWrapper(this::abrirRegistroEnvio));
         view.getBtnCargaDescarga().addActionListener(e ->
                 SwingUtil.exceptionWrapper(this::abrirCargaDescarga));
+        view.getBtnMisEnvios().addActionListener(e ->
+                SwingUtil.exceptionWrapper(this::abrirMisEnvios));
         view.getBtnSalir().addActionListener(e -> salir());
     }
 
@@ -41,6 +52,11 @@ public class MenuPaqueteriaController {
     private void abrirCargaDescarga() {
         CargaDescargaView cargaView = new CargaDescargaView(view);
         new AlmacenController(cargaView, new AlmacenModel());
+    }
+
+    private void abrirMisEnvios() {
+        SeguimientoListadoView listadoView = new SeguimientoListadoView(view);
+        new SeguimientoController(listadoView, new SeguimientoModel());
     }
 
     private void salir() {

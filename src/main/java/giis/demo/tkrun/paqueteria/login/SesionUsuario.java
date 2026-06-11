@@ -33,4 +33,5 @@ public class SesionUsuario {
     public String getCodigoPunto() { return codigoPunto; }
     public String getRol() { return rol; }
     public boolean isOperario() { return "OPERARIO".equals(rol); }
+    public boolean isCliente()  { return "CLIENTE".equals(rol); }
 }
