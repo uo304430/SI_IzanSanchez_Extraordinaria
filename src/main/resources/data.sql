@@ -57,15 +57,18 @@ INSERT INTO Cliente (idUsuario, telefono, direccionHabitual) VALUES
     (5, '600111222', 'Calle Uría 25, Oviedo, 33003'),
     (6, '600333444', 'Calle Mayor 10, Madrid, 28013');
 
+-- Ana López, empleada en oficina Gijón
 INSERT INTO Empleado (idUsuario, idPuntoLogistico) VALUES
-    (2, 1);  -- Ana López, empleada en oficina Gijón
+    (2, 1);
 
+-- Luis Gómez, operario en almacén centro Madrid
 INSERT INTO Operario (idUsuario, idPuntoLogistico) VALUES
-    (3, 5);  -- Luis Gómez, operario en almacén centro Madrid
+    (3, 5);
 
+-- Carlos Ruiz conduce furgoneta Gijón; Javier Martín conduce furgoneta Madrid
 INSERT INTO Transportista (idUsuario, idVehiculoHabitual) VALUES
-    (4, 1),  -- Carlos Ruiz, conduce furgoneta Gijón
-    (7, 5);  -- Javier Martín, conduce furgoneta Madrid
+    (4, 1),
+    (7, 5);
 
 INSERT INTO Administrador (idUsuario) VALUES
     (1);
