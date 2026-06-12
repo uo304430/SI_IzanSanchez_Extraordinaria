@@ -4,6 +4,9 @@ import giis.demo.util.SwingUtil;
 import giis.demo.tkrun.paqueteria.almacen.AlmacenController;
 import giis.demo.tkrun.paqueteria.almacen.AlmacenModel;
 import giis.demo.tkrun.paqueteria.almacen.CargaDescargaView;
+import giis.demo.tkrun.paqueteria.entregas.EntregasController;
+import giis.demo.tkrun.paqueteria.entregas.EntregasModel;
+import giis.demo.tkrun.paqueteria.entregas.EntregasView;
 import giis.demo.tkrun.paqueteria.envios.EnvioController;
 import giis.demo.tkrun.paqueteria.envios.EnvioModel;
 import giis.demo.tkrun.paqueteria.envios.RegistroEnvioView;
@@ -26,12 +29,15 @@ public class MenuPaqueteriaController {
         SesionUsuario sesion = SesionUsuario.getInstance();
         if (sesion.isCliente()) {
             view.getLblSesion().setText("Sesion: " + sesion.getNombre() + " (cliente)");
+        } else if (sesion.isTransportista()) {
+            view.getLblSesion().setText("Sesion: " + sesion.getNombre() + " (transportista)");
+            view.getBtnMisEnvios().setText("Mis entregas");
         } else {
             view.getLblSesion().setText("Sesion: " + sesion.getNombre() + " · " + sesion.getCodigoPunto());
         }
-        view.getBtnRegistrarEnvio().setEnabled(!sesion.isCliente());
+        view.getBtnRegistrarEnvio().setEnabled(!sesion.isCliente() && !sesion.isTransportista());
         view.getBtnCargaDescarga().setEnabled(sesion.isOperario());
-        view.getBtnMisEnvios().setEnabled(sesion.isCliente());
+        view.getBtnMisEnvios().setEnabled(sesion.isCliente() || sesion.isTransportista());
     }
 
     private void initListeners() {
@@ -55,8 +61,13 @@ public class MenuPaqueteriaController {
     }
 
     private void abrirMisEnvios() {
-        SeguimientoListadoView listadoView = new SeguimientoListadoView(view);
-        new SeguimientoController(listadoView, new SeguimientoModel());
+        if (SesionUsuario.getInstance().isTransportista()) {
+            EntregasView entregasView = new EntregasView();
+            new EntregasController(entregasView, new EntregasModel());
+        } else {
+            SeguimientoListadoView listadoView = new SeguimientoListadoView(view);
+            new SeguimientoController(listadoView, new SeguimientoModel());
+        }
     }
 
     private void salir() {

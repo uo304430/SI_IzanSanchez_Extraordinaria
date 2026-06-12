@@ -35,7 +35,7 @@ public class MenuPaqueteriaView extends JFrame {
         panel.add(btnSalir);
 
         add(panel);
-        setSize(320, 245);
+        setSize(320, 260);
         setLocationRelativeTo(null);
     }
 

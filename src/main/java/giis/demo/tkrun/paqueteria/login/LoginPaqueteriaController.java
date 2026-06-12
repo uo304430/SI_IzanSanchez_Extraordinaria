@@ -33,12 +33,14 @@ public class LoginPaqueteriaController {
         EmpleadoComboDto empleado = (EmpleadoComboDto) view.getCmbEmpleado().getSelectedItem();
         if (empleado == null)
             throw new ApplicationException("Debe seleccionar un empleado.");
-        SesionUsuario.getInstance().iniciar(
+        SesionUsuario sesion = SesionUsuario.getInstance();
+        sesion.iniciar(
                 empleado.getIdUsuario(),
                 empleado.getNombre(),
                 empleado.getIdPuntoLogistico(),
                 empleado.getCodigoPunto(),
                 empleado.getRol());
+        sesion.setIdVehiculoHabitual(empleado.getIdVehiculoHabitual());
         view.dispose();
         new MenuPaqueteriaController(new MenuPaqueteriaView());
     }
