@@ -1,143 +1,245 @@
 [![Build Status](https://github.com/javiertuya/samples-test-dev/actions/workflows/test.yml/badge.svg)](https://github.com/javiertuya/samples-test-dev/actions/workflows/test.yml)
-[![Javadoc](https://img.shields.io/badge/%20-javadoc-blue)](https://javiertuya.github.io/samples-test-dev/)
 
-# samples-test-dev
+# SI2025-PL32 — Sistema de Transporte de Paquetes
 
-Este proyecto es utilizado como proyecto base o plantilla para el desarrollo y a modo de ejemplo para ilustrar algunos aspectos del desarrollo y automatización de pruebas para las asignaturas relacionadas con ingenieria del software, sistemas de información y pruebas de software.
+Trabajo práctico de la asignatura **Sistemas de Información** (Ingeniería Informática, Universidad de Oviedo) — convocatoria de **junio 2026**.
 
-[Descargar la última versión](https://github.com/javiertuya/samples-test-dev/releases) - 
-[Ver más detalles en el javadoc](https://javiertuya.github.io/samples-test-dev/)
+El sistema gestiona el ciclo completo de un envío de paquetería: registro en oficina, asignación automática de rutas y vehículos, verificación en almacenes, seguimiento por el cliente, modificación del lugar de entrega y gestión de entregas fallidas con reintentos.
 
-## Contenido
+## Historias de usuario implementadas
 
-Permite ilustrar, entre otros:
-- Repaso del uso de JDBC para acceder a bases de datos
-- Acceso a bases de datos con Apache Commons DbUtils
-- Un conjunto de utilidades para simplificar el acceso a base de datos y el uso de tablas en Swing
-- Implementación de MVC con Swing
-- Automatización de pruebas unitarias con varias versiones de JUnit
-- Estructura y configuración de un proyecto Maven y diferentes reports
+| HU | Título | Rol principal |
+|----|--------|--------------|
+| HU-01 | Registro de envío desde oficina | Empleado de oficina |
+| HU-02 | Asignación automática de ruta y vehículos | Sistema (automático) |
+| HU-03 | Verificación de carga y descarga en almacén | Operario de almacén |
+| HU-04 | Seguimiento de envío por el cliente | Cliente |
+| HU-05 | Modificación del lugar de entrega | Cliente |
+| HU-06 | Gestión de entregas fallidas y reintentos | Transportista |
 
-Contiene los siguientes paquetes principales:
-- `giis.demo.jdbc`: Repaso de acceso a base de datos con jdbc
-- `giis.demo.tkrun`: Ilustra estructura de proyecto MVC con Swing (TicketRun)
-- `giis.demo.tkrun.ut`: Ilustra pruebas con JUnit para TicketRun
-- `giis.demo.util`: Diferentes utilidades de uso por parte de los anteriores
+## Stack técnico
 
-La estructura es la estándar de maven:
-- `src/main/java`: Codigo fuente de aplicación
+- **Java 17** + **Maven**
+- **SQLite** (`sqlite-jdbc` + Apache Commons DbUtils) — base de datos local `DemoDB.db`
+- **Swing** + **MigLayout** + **LGoodDatePicker** para la interfaz gráfica
+- **JUnit 5** + **JaCoCo** para tests y cobertura
+- **SLF4J** + reload4j para logging
+- Patrón **MVC** (Modelo / Vista / Controlador) + DTOs
+
+## Estructura de paquetes
+
+```
+src/main/java/
+  giis.demo.tkrun.paqueteria.envios       HU-01: registro de envíos
+  giis.demo.tkrun.paqueteria.rutas        HU-02: asignación de rutas
+  giis.demo.tkrun.paqueteria.almacen      HU-03: carga/descarga en almacén
+  giis.demo.tkrun.paqueteria.seguimiento  HU-04 y HU-05: seguimiento y modificación
+  giis.demo.tkrun.paqueteria.entregas     HU-06: entregas y reintentos
+  giis.demo.tkrun.paqueteria.login        Login, sesión y menú principal
+  giis.demo.tkrun.paqueteria.util         Utilidades comunes del dominio
+  giis.demo.util                          Utilidades de la plantilla (DB, Swing, etc.)
+
+src/test/java/
+  giis.demo.tkrun.paqueteria.rutas        Tests HU-02 (AsignacionRutaServiceTest)
+  giis.demo.tkrun.paqueteria.almacen      Tests HU-03 (AlmacenModelTest)
+  giis.demo.tkrun.paqueteria.entregas     Tests HU-06 (EntregasModelTest)
+```
+
+La estructura de directorios sigue el estándar de Maven:
+- `src/main/java`: Código fuente de la aplicación
+- `src/main/resources`: Scripts SQL (`schema.sql`, `data.sql`) y `application.properties`
 - `src/test/java`: Pruebas unitarias
-- `target`: Generado con el codigo objeto y reports
+- `target`: Generado con el código objeto y reports
 
-## Requisitos e Instalación
+## Requisitos e instalación
 
-Este proyecto requiere un mínimo de Java 17 JDK.
+Este proyecto requiere un mínimo de **Java 17 JDK**.
 
-Preparación del repositorio y del proyecto:
-- Desde GitHub: Crear un **nuevo repositorio** usando este proyecto como plantilla
-  (opción `Use this template` en este repositorio)
-- Desde el entorno de desarrollo local o desde linea de comandos:
-  **Clonar** el repositorio recién creado indicando su url para crear el proyecto en el entorno de desarrollo local
-  (si se hace desde linea de comandos: `git clone <url>`)
-- Cambiar el **nombre del proyecto**: Modificar estos ficheros:
-  - `.project`: cambiar `<name>samples-test-dev</name>` para incluir el nombre del proyecto
-  - `pom.xml`: cambiar `<artifactId>samples-test-dev</artifactId>` para incluir el nombre del proyecto
-  - Recordar hacer push a main tras estos cambios
+1. Clonar el repositorio:
+   ```
+   git clone <url-del-repositorio>
+   ```
+2. Importar en Eclipse como proyecto Maven existente (*File → Import → Existing Maven Projects*)
+3. *Maven → Update Project* para descargar dependencias
+4. Verificar que el JDK configurado sea Java 17: en *Build Path → JRE System Library*, comprobar que JavaSE-17 apunta a un JDK
 
-## Ejecución del proyecto:
+## Ejecución
 
-- Desde línea de comandos con [Apache Maven](https://maven.apache.org/download.cgi):
-  - Asegurarse de que JAVA_HOME apunta a un JDK y no JRE
-  - Ejecución completa: `mvn install`, incluye generación del Javadoc
-  - Solo pruebas unitarias: `mvn test`, todas las pruebas: `mvn verify`
-  - Ejecución sin tests: `mvn install -DskipTests=true`, genera todos los jar incluyendo javadoc
+**Desde Eclipse:**
 
-- Desde Eclipse con M2Eclipse instalado (las distribuciones recientes ya lo incluyen).
-  - Asegurarse de que esta configurado JDK: Desde build path, editar JRE System Library y en Environment
-	comprobar que JavaSE-17 apunta a un JDK en vez de un JRE
-  - *Maven->Update Project*: Actualiza todas las dependencias y permite usar el proyecto como 
-    si hubiera sido creado desde el propio Eclipse
-  - *Run As->Maven install*: Ejecuta este (o otros) comandos maven desde Eclipse
-  - Ejecutar los tests en `src/main/test` o el programa principal (aplicación swing)
-    en la clase `giis.demo.util.SwingMain`
+- Ejecutar la aplicación: clase principal `giis.demo.util.SwingMain`
+  - Pulsar **"Inicializar BD"** y **"Cargar Datos"** antes del primer uso para crear y poblar la base de datos
+- Ejecutar los tests: botón derecho sobre cualquier clase de test → *Run As → JUnit Test*
+
+**Desde línea de comandos** (requiere [Apache Maven](https://maven.apache.org/download.cgi) en el PATH):
+```
+mvn test          # solo pruebas unitarias
+mvn install       # compilación completa + pruebas + javadoc
+```
+
+## Usuarios de prueba
+
+La base de datos de prueba incluye los siguientes usuarios (contraseña `1234` para todos):
+
+| Usuario | Rol | Identificador en el combo |
+|---------|-----|--------------------------|
+| Ana López | Empleado | `Ana López — OF-GIJ-01 (empleado)` |
+| Luis Gómez | Operario | `Luis Gómez — AL-CTRO-01 (operario)` |
+| Carlos Ruiz | Transportista | `Carlos Ruiz — vehiculo 1234-AAA (transportista)` |
+| Javier Martín | Transportista | `Javier Martín — vehiculo 7890-EEE (transportista)` |
+| María Pérez | Cliente | `María Pérez — DNI 44444444E (cliente)` |
+| Pedro Sánchez | Cliente | `Pedro Sánchez — DNI 55555555F (cliente)` |
+
+## Códigos de barras para pruebas (HU-03)
+
+El operario Luis Gómez trabaja en el almacén **AL-CTRO-01**:
+
+| Operación | Código de barras | Envío | Peso declarado |
+|-----------|-----------------|-------|----------------|
+| ENTRADA | `BC-20260601-0001-X` | ENV-20260601-0001 | 3,5 kg |
+| SALIDA | `BC-20260530-0002-Y` | ENV-20260530-0002 | 1,8 kg |
 
 ## Reports
 
-La instalacion anterior compilará, ejecutará pruebas y dispondrá de los reports en carpetas dentro de `target`:
-- `reports/testapidocs/index.html`: javadoc del proyecto
-- `reports/surefire.html`: report estandar de las pruebas unitarias (ut)
-- `site/junit*`: report de todas las pruebas con el formato que genera junit
-- `site/jacoco-ut`: reports de cobertura de código
+Tras ejecutar `mvn install`, los reports quedan en `target`:
+- `reports/surefire.html`: report de las pruebas unitarias
+- `site/jacoco-ut`: cobertura de código
 
-## Personalización de GitHub Actions y Dependabot
+## Esquema de base de datos
 
-Este proyecto está configurado con los correspondientes scripts de Dependabot (para actualización de versiones de dependencias)
-y GitHub actions (para realizar acciones automáticas cuando se realiza un pull request hacia main o un push de una rama).
-A continuación se describen y se indican las posibles personalizaciones a realizar:
-
-- `.github/workflows/test.yml`: Ejecuta automáticamente un build y todas las pruebas unitarias.
-  Si se mantiene,
-  en el caso de que no se tengan pruebas unitarias, modificarlo para que solamente compile la aplicación:
-  - cambiar `verify` por `compile` en la acción `run: mvn verify ...`
-  - eliminar el código a partir de `- name: Publish surefire test report`
-- `.github/workflows/pages.yml`: Exporta el javadoc de la aplicación a GitHub pages cuando se actualiza la rama main.
-  La ejecución del workflow indicará fallo
-  si no se ha configurado el repositorio para ello, por lo que se puede eliminar.
-- `.github/dependabot.yml`: Permite que Dependabot cree una pull request cuando hay alguna dependencia
-  que precisa actualización. Se recomienda mantenerlo y hacer merge de las pull requests que se creen.
-
-# DB schema
-``` mermaid
+```mermaid
 erDiagram
-  HistorialIncidencia {
-    INTEGER id
-    DATETIME fecha
-    VARCHAR accion
-    VARCHAR comentario
-  }
-  Usuarios {
-    INT id
-    VARCHAR nombre
-    VARCHAR email
-    VARCHAR dni
-  }
-  Incidencia {
-    INT id
-    VARCHAR descripcion
-    VARCHAR Coste
-    VARCHAR n
-    DATE fecha
-    BOOLEAN n
-  }
-  Tipos {
-    INTEGER id
-    VARCHAR nombre
-  }
-  Zonas {
-    INTEGER id
-    VARCHAR descripcion
-  }
-  Roles {
-    INT id
-    VARCHAR nombre
-  }
-  Estados {
-    INT id
-    VARCHAR nombre
-  }
-  TipoTecnico {
-    INTEGER id
-  }
+    Rol {
+        INTEGER id
+        VARCHAR nombre
+    }
+    Usuario {
+        INTEGER id
+        VARCHAR email
+        VARCHAR nombre
+        VARCHAR password
+        INTEGER idRol
+    }
+    Zona {
+        INTEGER id
+        VARCHAR codigo
+        VARCHAR descripcion
+    }
+    PuntoLogistico {
+        INTEGER id
+        VARCHAR codigo
+        VARCHAR tipo
+        VARCHAR direccion
+        VARCHAR ciudad
+        VARCHAR codigoPostal
+        INTEGER idZona
+    }
+    Vehiculo {
+        INTEGER id
+        VARCHAR matricula
+        VARCHAR tipo
+        INTEGER capacidadPesoKg
+        INTEGER idBaseOperativa
+    }
+    TipoServicio {
+        INTEGER id
+        VARCHAR codigo
+        VARCHAR descripcion
+        INTEGER diasEstimadosEntrega
+    }
+    Tarifa {
+        INTEGER id
+        INTEGER idTipoServicio
+        NUMERIC pesoDesdeKg
+        NUMERIC pesoHastaKg
+        INTEGER idZonaOrigen
+        INTEGER idZonaDestino
+        NUMERIC precio
+    }
+    Envio {
+        INTEGER id
+        VARCHAR codigo
+        INTEGER idCliente
+        INTEGER idTipoServicio
+        VARCHAR estado
+        VARCHAR modalidadEntrega
+        NUMERIC costeCalculado
+        INTEGER idZonaOrigen
+        INTEGER idZonaDestino
+        INTEGER idPuntoDestino
+        DATE fechaEstimadaEntrega
+        INTEGER modificacionesEntrega
+    }
+    Paquete {
+        INTEGER id
+        INTEGER idEnvio
+        VARCHAR codigoBarras
+        NUMERIC pesoDeclaradoKg
+    }
+    Ruta {
+        INTEGER id
+        INTEGER idEnvio
+        VARCHAR estado
+    }
+    TramoRuta {
+        INTEGER id
+        INTEGER idRuta
+        INTEGER ordenSecuencia
+        VARCHAR tipo
+        INTEGER idPuntoOrigen
+        INTEGER idPuntoDestino
+        VARCHAR direccionDestino
+        INTEGER idVehiculo
+        VARCHAR estado
+        DATETIME fechaPrevista
+    }
+    IntentoEntrega {
+        INTEGER id
+        INTEGER idEnvio
+        INTEGER idTramoEntrega
+        INTEGER numeroIntento
+        INTEGER idTransportista
+        VARCHAR resultado
+        VARCHAR motivoFallo
+    }
+    HistorialEvento {
+        INTEGER id
+        INTEGER idEnvio
+        DATETIME fechaEvento
+        VARCHAR accion
+        INTEGER idUsuarioResponsable
+        VARCHAR estadoResultante
+        VARCHAR comentario
+    }
+    Incidencia {
+        INTEGER id
+        INTEGER idEnvio
+        VARCHAR tipo
+        VARCHAR descripcion
+        VARCHAR estado
+    }
 
-  Usuarios ||--o{ Roles : "Rol"
-  Incidencia ||--o{ Tipos : "Tipo"
-  Incidencia ||--o{ Zonas : "Zona"
-  Incidencia ||--o{ Usuarios : "Usuario"
-  Incidencia ||--o{ Usuarios : "Tecnico"
-  Incidencia ||--o{ Estados : "Estado"
-  HistorialIncidencia ||--o{ Incidencia : "Incidencia"
-  HistorialIncidencia ||--o{ Usuarios : "Tecnico"
-  HistorialIncidencia ||--o{ Estados : "Estado"
-  TipoTecnico ||--o{ Usuarios : "Usuario"
-  TipoTecnico ||--o{ Tipos : "Tipo"
+    Usuario ||--o{ Rol : "tiene"
+    Envio ||--o{ Usuario : "idCliente"
+    Envio ||--o{ TipoServicio : "idTipoServicio"
+    Envio ||--o{ Zona : "idZonaOrigen"
+    Envio ||--o{ Zona : "idZonaDestino"
+    Envio ||--o{ PuntoLogistico : "idPuntoDestino"
+    Tarifa ||--o{ TipoServicio : "idTipoServicio"
+    Tarifa ||--o{ Zona : "idZonaOrigen"
+    Tarifa ||--o{ Zona : "idZonaDestino"
+    Paquete ||--|| Envio : "idEnvio"
+    PuntoLogistico ||--o{ Zona : "idZona"
+    Vehiculo ||--o{ PuntoLogistico : "idBaseOperativa"
+    Ruta ||--|| Envio : "idEnvio"
+    TramoRuta ||--o{ Ruta : "idRuta"
+    TramoRuta ||--o{ PuntoLogistico : "idPuntoOrigen"
+    TramoRuta ||--o{ PuntoLogistico : "idPuntoDestino"
+    TramoRuta ||--o{ Vehiculo : "idVehiculo"
+    IntentoEntrega ||--o{ Envio : "idEnvio"
+    IntentoEntrega ||--o{ TramoRuta : "idTramoEntrega"
+    IntentoEntrega ||--o{ Usuario : "idTransportista"
+    HistorialEvento ||--o{ Envio : "idEnvio"
+    HistorialEvento ||--o{ Usuario : "idUsuarioResponsable"
+    Incidencia ||--o{ Envio : "idEnvio"
 ```
